@@ -24,7 +24,7 @@ asyncpg==0.30.0
 psycopg2==2.9.10
 pymongo==4.6.1
 pinecone==6.0.1
-aiosmtplib==5.1.0
+aiosmtplib==3.0.2
 # Security & Authentication
 python-jose[cryptography]==3.3.0
 passlib==1.7.4
