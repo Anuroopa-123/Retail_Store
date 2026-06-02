@@ -1,18 +1,8 @@
-# virtual environment
-.env/
-
-# Python
+.venv/
+*.env
+.env
 __pycache__/
 *.pyc
-*.pyo
-
-# env variables
 .env.local
-*.env
-
-# VS Code
 .vscode/
-
-# Node
 node_modules/
-.venv/
