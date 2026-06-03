@@ -20,6 +20,9 @@ from src.presentation.api.user.router import router as user_router
 from src.presentation.api.tenant.router import (
     router as tenant_router
 )
+from src.presentation.api.store.router import (
+    router as store_router
+)
 
 
 # ── lifespan ─────────────────────────────────────────────────────────────────
@@ -101,6 +104,10 @@ app.include_router(roles_router, prefix="/api/v1")
 app.include_router(user_router, prefix="/api/v1")
 app.include_router(
     tenant_router,
+    prefix="/api/v1"
+)
+app.include_router(
+    store_router,
     prefix="/api/v1"
 )
 
