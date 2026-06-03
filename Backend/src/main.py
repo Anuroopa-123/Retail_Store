@@ -5,6 +5,11 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
+from slowapi.middleware import SlowAPIMiddleware
+from src.infrastructure.security.rate_limit import limiter
+
+from starlette.middleware.trustedhost import TrustedHostMiddleware
+from src.infrastructure.security.middleware import SecurityHeadersMiddleware
 
 from src.configuration.config import config
 from src.application.exception_handler import DomainError
@@ -27,6 +32,7 @@ async def lifespan(app: FastAPI):
     # shutdown
     await engine.dispose()
     print("✓ DB connections closed")
+    
 
 
 # ── app ───────────────────────────────────────────────────────────────────────
@@ -38,6 +44,22 @@ app = FastAPI(
     redoc_url="/redoc",
     lifespan=lifespan,
 )
+
+app.state.limiter = limiter
+app.add_middleware(SlowAPIMiddleware)
+
+# ── security middleware ───────────────────────────────────────────────────────
+
+
+app.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=[
+        "localhost",
+        "127.0.0.1",
+    ]
+)
+
+app.add_middleware(SecurityHeadersMiddleware)
 
 # ── middleware ────────────────────────────────────────────────────────────────
 
