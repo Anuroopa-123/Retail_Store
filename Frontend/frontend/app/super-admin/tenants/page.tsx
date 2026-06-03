@@ -7,7 +7,7 @@ import "./tenants.css";
 export default function TenantPage() {
 
   const [name, setName] = useState("");
-  const [slug, setSlug] = useState("");
+//   const [slug, setSlug] = useState("");
 
   const createTenant = async () => {
 
@@ -26,7 +26,6 @@ export default function TenantPage() {
           },
           body: JSON.stringify({
             name,
-            slug,
           }),
         }
       );
@@ -41,7 +40,7 @@ export default function TenantPage() {
       alert("Tenant Created Successfully");
 
       setName("");
-      setSlug("");
+    //   setSlug("");
 
     } catch (error) {
       console.error(error);
@@ -66,7 +65,7 @@ export default function TenantPage() {
           />
         </div>
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <input
             placeholder="Tenant Slug"
             value={slug}
@@ -74,7 +73,7 @@ export default function TenantPage() {
               setSlug(e.target.value)
             }
           />
-        </div>
+        </div> */}
 
         <button
           className="create-btn"
