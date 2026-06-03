@@ -1,0 +1,49 @@
+.store-card {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 20px;
+  max-width: 900px;
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.08);
+}
+
+.store-card h1 {
+  color: #8e1697;
+  margin-bottom: 25px;
+}
+
+.store-card select,
+.store-card input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 18px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 15px;
+}
+
+.store-card select:focus,
+.store-card input:focus {
+  outline: none;
+  border-color: #8e1697;
+}
+
+.store-card button {
+  background: linear-gradient(
+    135deg,
+    #8e1697,
+    #c71585
+  );
+
+  color: white;
+  border: none;
+  padding: 14px 25px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.store-card button:hover {
+  opacity: 0.9;
+}

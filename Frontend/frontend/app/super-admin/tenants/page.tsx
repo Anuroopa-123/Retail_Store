@@ -1,86 +1,178 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "@/app/components/layout/Layout";
 import "./tenants.css";
+import { Tenant } from "@/src/types/tenant";
 
 export default function TenantPage() {
 
   const [name, setName] = useState("");
-//   const [slug, setSlug] = useState("");
 
-  const createTenant = async () => {
+const [tenants, setTenants] =
+  useState<Tenant[]>([]);
+
+  const [showForm, setShowForm] =
+    useState(false);
+
+  const getTenants = async () => {
 
     try {
 
       const response = await fetch(
-        "http://127.0.0.1:8000/api/v1/tenants",
-        {
-          method: "POST",
-          headers: {
-            Authorization:
-              `Bearer ${localStorage.getItem(
-                "access_token"
-              )}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name,
-          }),
-        }
+        "http://127.0.0.1:8000/api/v1/tenants"
       );
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
-      if (!response.ok) {
-        alert(data.detail);
-        return;
+      setTenants(data);
+
+    } catch(error) {
+      console.log(error);
+    }
+  };
+
+useEffect(() => {
+
+  const load = async () => {
+    await getTenants();
+  };
+
+  load();
+
+}, []);
+
+  const createTenant = async () => {
+
+    const response = await fetch(
+      "http://127.0.0.1:8000/api/v1/tenants",
+      {
+        method:"POST",
+
+        headers:{
+          "Content-Type":
+            "application/json",
+
+          Authorization:
+            `Bearer ${localStorage.getItem(
+              "access_token"
+            )}`
+        },
+
+        body:JSON.stringify({
+          name
+        })
       }
+    );
 
-      alert("Tenant Created Successfully");
+    if(response.ok){
 
       setName("");
-    //   setSlug("");
 
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong");
+      setShowForm(false);
+
+      getTenants();
     }
   };
 
   return (
+
     <Layout>
 
-      <div className="tenant-page">
+      <div className="page-header">
 
-        <h1>Create Tenant</h1>
+        <h1>Tenant Management</h1>
 
-        <div className="form-group">
+        <button
+          className="add-btn"
+          onClick={() =>
+            setShowForm(true)
+          }
+        >
+          + Add Tenant
+        </button>
+
+      </div>
+
+      <input
+        className="search-box"
+        placeholder="Search Tenant"
+      />
+
+      {showForm && (
+
+        <div className="tenant-card">
+
+          <h2>Create Tenant</h2>
+
           <input
             placeholder="Tenant Name"
             value={name}
-            onChange={(e) =>
-              setName(e.target.value)
+            onChange={(e)=>
+              setName(
+                e.target.value
+              )
             }
           />
+
+          <button
+            className="save-btn"
+            onClick={createTenant}
+          >
+            Save
+          </button>
+
         </div>
 
-        {/* <div className="form-group">
-          <input
-            placeholder="Tenant Slug"
-            value={slug}
-            onChange={(e) =>
-              setSlug(e.target.value)
-            }
-          />
-        </div> */}
+      )}
 
-        <button
-          className="create-btn"
-          onClick={createTenant}
-        >
-          Create Tenant
-        </button>
+      <div className="table-container">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>S.No</th>
+              <th>Name</th>
+              <th>Slug</th>
+              <th>Status</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            {tenants.map(
+              (tenant,index)=>(
+                <tr
+                  key={tenant.id}
+                >
+                  <td>
+                    {index + 1}
+                  </td>
+
+                  <td>
+                    {tenant.name}
+                  </td>
+
+                  <td>
+                    {tenant.slug}
+                  </td>
+
+                  <td>
+                    {tenant.status}
+                  </td>
+                </tr>
+              )
+            )}
+
+          </tbody>
+
+        </table>
 
       </div>
 

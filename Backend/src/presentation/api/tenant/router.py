@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 from slugify import slugify
 
 from src.infrastructure.database.postgresql import get_session
@@ -11,8 +12,22 @@ router = APIRouter(
     tags=["Tenants"]
 )
 
+
 class TenantCreateRequest(BaseModel):
     name: str
+
+
+@router.get("/")
+async def list_tenants(
+    db: AsyncSession = Depends(get_session)
+):
+
+    result = await db.execute(
+        select(Tenant)
+    )
+
+    return result.scalars().all()
+
 
 @router.post("/")
 async def create_tenant(
