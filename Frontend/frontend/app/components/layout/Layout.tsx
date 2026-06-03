@@ -1,6 +1,5 @@
-// app/components/layout/Layout.tsx
-
 import Sidebar from "./sidebar";
+import "./layout.css";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -11,13 +10,11 @@ export default function Layout({
 }: LayoutProps) {
   return (
     <div className="app-layout">
-
       <Sidebar />
 
       <main className="content">
         {children}
       </main>
-
     </div>
   );
 }

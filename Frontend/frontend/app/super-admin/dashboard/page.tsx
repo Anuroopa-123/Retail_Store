@@ -1,23 +1,44 @@
 import Layout from "@/app/components/layout/Layout";
+import "./dashboard.css";
 
 export default function DashboardPage() {
   return (
     <Layout>
 
-      <h1>
-        Super Admin Dashboard
-      </h1>
+      <div className="dashboard-container">
 
-      <div>
-        Total Tenants
-      </div>
+        <div className="dashboard-header">
+          <h1>Welcome Super Admin</h1>
+          <p>
+            Manage Tenants, Stores and Admins
+          </p>
+        </div>
 
-      <div>
-        Total Stores
-      </div>
+        <div className="stats-grid">
 
-      <div>
-        Total Admins
+          <div className="stat-card">
+            <h3>Total Tenants</h3>
+            <div className="stat-number">
+              10
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <h3>Total Stores</h3>
+            <div className="stat-number">
+              25
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <h3>Total Admins</h3>
+            <div className="stat-number">
+              8
+            </div>
+          </div>
+
+        </div>
+
       </div>
 
     </Layout>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import "./sidebar.css";
 
 export default function Sidebar() {
   return (
@@ -41,6 +42,10 @@ export default function Sidebar() {
         </li>
 
       </ul>
+
+      <div className="logout-btn">
+        Logout
+      </div>
 
     </div>
   );

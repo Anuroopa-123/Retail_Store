@@ -1,0 +1,41 @@
+.tenant-page {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.08);
+
+  max-width: 700px;
+}
+
+.tenant-page h1 {
+  margin-bottom: 25px;
+  color: #8e1697;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 16px;
+}
+
+.create-btn {
+  background: linear-gradient(
+    135deg,
+    #8e1697,
+    #c71585
+  );
+
+  color: white;
+  border: none;
+  padding: 15px 25px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+}
