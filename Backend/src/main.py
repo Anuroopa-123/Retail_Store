@@ -23,6 +23,9 @@ from src.presentation.api.tenant.router import (
 from src.presentation.api.store.router import (
     router as store_router
 )
+from src.presentation.api.admin.router import (
+    router as admin_router
+)
 
 
 # ── lifespan ─────────────────────────────────────────────────────────────────
@@ -108,6 +111,10 @@ app.include_router(
 )
 app.include_router(
     store_router,
+    prefix="/api/v1"
+)
+app.include_router(
+    admin_router,
     prefix="/api/v1"
 )
 

@@ -1,0 +1,86 @@
+.page-container {
+  padding: 30px;
+}
+
+.page-title {
+  color: #8e1697;
+  margin-bottom: 25px;
+}
+
+.admin-card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 20px rgba(0,0,0,.08);
+  margin-bottom: 30px;
+}
+
+.admin-card select,
+.admin-card input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+.admin-card select:focus,
+.admin-card input:focus {
+  outline: none;
+  border-color: #8e1697;
+}
+
+.create-admin-btn {
+  background: linear-gradient(
+    135deg,
+    #8e1697,
+    #c71585
+  );
+
+  color: white;
+  border: none;
+  padding: 14px 22px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.create-admin-btn:hover {
+  opacity: .9;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,.08);
+}
+
+.admin-table th {
+  background: #8e1697;
+  color: white;
+  padding: 14px;
+  text-align: left;
+}
+
+.admin-table td {
+  padding: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.admin-table tr:hover {
+  background: #faf6fc;
+}
+
+.pending {
+  color: orange;
+  font-weight: 600;
+}
+
+.active {
+  color: green;
+  font-weight: 600;
+}
