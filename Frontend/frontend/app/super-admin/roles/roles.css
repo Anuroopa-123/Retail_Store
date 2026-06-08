@@ -1,0 +1,121 @@
+.roles-page {
+  background: #fff;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.08);
+}
+
+.roles-page h1 {
+  color: #8e1697;
+  margin-bottom: 20px;
+}
+
+.roles-table {
+  overflow-x: auto;
+}
+
+.roles-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.roles-table th {
+  background: #8e1697;
+  color: white;
+  padding: 14px;
+  text-align: left;
+}
+
+.roles-table td {
+  padding: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.roles-table tr:hover {
+  background: #faf5fc;
+}
+.page-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.add-role-btn{
+  background:#9c179e;
+  color:#fff;
+  border:none;
+  padding:12px 25px;
+  border-radius:30px;
+  cursor:pointer;
+}
+
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+
+.modal{
+  background:#fff;
+  width:450px;
+  padding:30px;
+  border-radius:20px;
+}
+
+.modal h2{
+  text-align:center;
+  color:#9c179e;
+  margin-bottom:20px;
+}
+
+.modal input{
+  width:100%;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:10px;
+}
+
+.modal-actions{
+  margin-top:20px;
+  display:flex;
+  justify-content:center;
+  gap:15px;
+}
+
+.cancel-btn{
+  padding:10px 25px;
+  border:1px solid #ccc;
+  background:white;
+  border-radius:25px;
+}
+
+.save-btn{
+  padding:10px 25px;
+  border:none;
+  background:#c57dbf;
+  color:white;
+  border-radius:25px;
+}
+
+.edit-btn{
+  background:#2196f3;
+  color:white;
+  border:none;
+  padding:6px 12px;
+  border-radius:6px;
+  margin-right:8px;
+}
+
+.delete-btn{
+  background:#e53935;
+  color:white;
+  border:none;
+  padding:6px 12px;
+  border-radius:6px;
+}
