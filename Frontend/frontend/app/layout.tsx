@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
 import {
   AuthProvider
@@ -35,6 +36,36 @@ export default function RootLayout({
     >
 
       <body className="min-h-full flex flex-col">
+
+        <Toaster
+  position="top-right"
+  toastOptions={{
+    duration: 3000,
+
+    success: {
+      style: {
+        background: "#22c55e",
+        color: "#ffffff",
+        borderRadius: "12px",
+        padding: "14px 18px",
+      },
+      iconTheme: {
+        primary: "#ffffff",
+        secondary: "#22c55e",
+      },
+    },
+
+    error: {
+      style: {
+        background: "#ef4444",
+        color: "#ffffff",
+        borderRadius: "12px",
+        padding: "14px 18px",
+      },
+    },
+  }}
+/>
+
 
         <AuthProvider>
 

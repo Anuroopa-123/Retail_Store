@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import "./verify-email.css";
 
+import toast from "react-hot-toast";
+
+
 export default function VerifyEmail() {
 
   const router = useRouter();
@@ -28,15 +31,35 @@ export default function VerifyEmail() {
       const data =
         await response.json();
 
-      alert(data.message);
+    if (response.ok) {
 
-      if(response.ok){
+  toast.success(
+    "Email verified successfully",
+    {
+      icon: "✅"
+    }
+  );
 
-        router.push(
-          "/auth/login"
-        );
+  setTimeout(() => {
 
-      }
+    router.push(
+      "/auth/login"
+    );
+
+  }, 1500);
+
+} else {
+
+  toast.error(
+    data.detail ||
+    "Invalid OTP"
+  );
+
+}
+
+  
+
+      
   };
 
  return (
