@@ -16,6 +16,9 @@ interface AuthContextType {
   loading: boolean;
   logout: () => void;
   refreshUser: () => Promise<void>;
+  redirectToDashboard: (
+    user: User
+  ) => void;
 }
 
 const AuthContext =
@@ -33,10 +36,67 @@ export function AuthProvider({
   const [loading, setLoading] =
     useState(true);
 
+  const redirectToDashboard =
+    (user: User) => {
+
+      if (
+        user.roles?.includes(
+          "super_admin"
+        )
+      ) {
+
+        window.location.href =
+          "/super-admin/dashboard";
+
+      }
+
+      else if (
+        user.roles?.includes(
+          "admin"
+        )
+      ) {
+
+        window.location.href =
+          "/admin/dashboard";
+
+      }
+
+      else if (
+        user.roles?.includes(
+          "employee"
+        )
+      ) {
+
+        window.location.href =
+          "/employee/dashboard";
+
+      }
+
+      else if (
+        user.roles?.includes(
+          "sales"
+        )
+      ) {
+
+        window.location.href =
+          "/sales/dashboard";
+
+      }
+
+      else {
+
+        window.location.href =
+          "/auth/login";
+
+      }
+  };
+
   const refreshUser = async () => {
 
     const token =
-      localStorage.getItem("access_token");
+      localStorage.getItem(
+        "access_token"
+      );
 
     if (!token) {
       setLoading(false);
@@ -71,13 +131,19 @@ export function AuthProvider({
     }
   };
 
-useEffect(() => {
-  const timer = setTimeout(() => {
-    void refreshUser();
-  }, 0);
+  useEffect(() => {
 
-  return () => clearTimeout(timer);
-}, []);
+    const timer =
+      setTimeout(() => {
+
+        void refreshUser();
+
+      }, 0);
+
+    return () =>
+      clearTimeout(timer);
+
+  }, []);
 
   const logout = () => {
 
@@ -96,16 +162,21 @@ useEffect(() => {
   };
 
   return (
+
     <AuthContext.Provider
       value={{
         user,
         loading,
         logout,
         refreshUser,
+        redirectToDashboard,
       }}
     >
+
       {children}
+
     </AuthContext.Provider>
+
   );
 }
 
@@ -115,9 +186,11 @@ export const useAuth = () => {
     useContext(AuthContext);
 
   if (!context) {
+
     throw new Error(
       "AuthContext missing"
     );
+
   }
 
   return context;

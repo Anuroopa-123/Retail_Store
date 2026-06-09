@@ -39,29 +39,43 @@ export default function VerifyEmail() {
       }
   };
 
-  return (
-    <div>
+ return (
+  <div className="verify-container">
 
-      <h1>
+    <div className="verify-card">
+
+      <div className="verify-icon">
+        📧
+      </div>
+
+      <h1 className="verify-title">
         Verify Email
       </h1>
 
+      <p className="verify-subtitle">
+        Enter the 6 digit OTP sent
+        to your email address.
+      </p>
+
       <input
+        className="otp-input"
         value={otp}
-        onChange={(e)=>
-          setOtp(
-            e.target.value
-          )
+        onChange={(e) =>
+          setOtp(e.target.value)
         }
-        placeholder="Enter OTP"
+        placeholder="000000"
+        maxLength={6}
       />
 
       <button
+        className="verify-btn"
         onClick={verifyOTP}
       >
-        Verify
+        Verify OTP
       </button>
 
     </div>
-  );
+
+  </div>
+);
 }

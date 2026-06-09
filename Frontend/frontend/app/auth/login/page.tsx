@@ -4,9 +4,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import "./login.css";
 import { generateCaptcha } from "@/src/lib/captcha";
+import {
+  useAuth
+} from "@/src/context/AuthContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const {
+  redirectToDashboard
+} = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -59,21 +65,36 @@ export default function LoginPage() {
       const data =
         await response.json();
 
-      if (response.ok) {
-        localStorage.setItem(
-          "access_token",
-          data.access_token
-        );
+  if (response.ok) {
 
-        localStorage.setItem(
-          "refresh_token",
-          data.refresh_token
-        );
+  localStorage.setItem(
+    "access_token",
+    data.access_token
+  );
 
-        router.push(
-          "/super-admin/dashboard"
-        );
-      } else {
+  localStorage.setItem(
+    "refresh_token",
+    data.refresh_token
+  );
+
+  const meResponse =
+    await fetch(
+      "http://127.0.0.1:8000/api/v1/auth/me",
+      {
+        headers: {
+          Authorization:
+            `Bearer ${data.access_token}`
+        }
+      }
+    );
+
+  const currentUser =
+    await meResponse.json();
+
+  redirectToDashboard(
+    currentUser
+  );
+} else {
       if (
   response.status === 403 &&
   data.detail.includes("verified")
