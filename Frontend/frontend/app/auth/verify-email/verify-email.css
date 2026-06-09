@@ -1,0 +1,26 @@
+.verify-container{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#f5f5f5;
+}
+
+.verify-card{
+    width:500px;
+    background:white;
+    padding:40px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+
+.verify-title{
+    color:#7c1d6f;
+    margin-bottom:20px;
+}
+
+.verify-message{
+    color:#555;
+    font-size:18px;
+}

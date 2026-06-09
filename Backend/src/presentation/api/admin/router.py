@@ -2,6 +2,19 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
+import random
+
+import secrets
+
+from datetime import (
+    datetime,
+    timedelta,
+    timezone
+)
+
+from src.application.services.user_service import UserService
+
+from src.infrastructure.email_service import EmailService
 
 from src.infrastructure.database.postgresql import get_session
 
@@ -53,6 +66,38 @@ async def create_admin(
     await db.commit()
 
     await db.refresh(user)
+    
+    service = UserService(db)
+
+    raw_token =  str(
+    random.randint(
+        100000,
+        999999
+    )
+)
+
+    expires_at = (
+    datetime.now(timezone.utc)
+    + timedelta(hours=24)
+    )
+
+    await service.create_email_verification_token(
+    user_id=user.id,
+    token_hash=raw_token,
+    expires_at=expires_at,
+    )
+
+    await db.commit()
+    try:
+
+        await EmailService.send_verification_email(
+        to=user.email,
+        token=raw_token
+        )
+
+    except Exception as e:
+
+        print(e)
 
     return user
 

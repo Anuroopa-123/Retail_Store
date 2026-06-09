@@ -7,6 +7,10 @@ from typing import Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.domain.entities.auth.email_verification_token import (
+    EmailVerificationToken
+)
+
 from src.application.services.core.base_service import BaseService
 from src.persistence.user_repository import UserRepository
 from src.application.models.auth.user_crud_model import (

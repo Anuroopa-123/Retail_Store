@@ -61,13 +61,13 @@ app.add_middleware(SlowAPIMiddleware)
 # ── security middleware ───────────────────────────────────────────────────────
 
 
-app.add_middleware(
-    TrustedHostMiddleware,
-    allowed_hosts=[
-        "localhost",
-        "127.0.0.1",
-    ]
-)
+# app.add_middleware(
+#     TrustedHostMiddleware,
+#     allowed_hosts=[
+#         "localhost",
+#         "127.0.0.1",
+#     ]
+# )
 
 app.add_middleware(SecurityHeadersMiddleware)
 
@@ -75,7 +75,7 @@ app.add_middleware(SecurityHeadersMiddleware)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=config.ALLOWED_HOSTS_LIST,
+    allow_origins=config.CORS_ORIGINS_LIST,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

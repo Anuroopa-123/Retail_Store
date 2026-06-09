@@ -1,59 +1,67 @@
 "use client";
 
-import {
-  useEffect,
-  useState,
-} from "react";
-
-import {
-  useSearchParams,
-  useRouter,
-} from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import "./verify-email.css";
 
 export default function VerifyEmail() {
 
-  const searchParams =
-    useSearchParams();
+  const router = useRouter();
 
-  const router =
-    useRouter();
+  const [email, setEmail] =
+  useState("");
 
-  const [message,
-    setMessage] =
-      useState("Verifying...");
+  const [otp, setOtp] =
+    useState("");
 
-  useEffect(() => {
+  const verifyOTP =
+    async () => {
 
-    const token =
-      searchParams.get("token");
-
-    if (!token) return;
-
-    fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/verify-email?token=${token}`
-    )
-      .then((r) => r.json())
-      .then((data) => {
-
-        setMessage(
-          data.message
+      const response =
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/verify-otp?token=${otp}`,
+          {
+            method: "POST"
+          }
         );
 
-        setTimeout(() => {
-          router.push(
-            "/auth/login"
-          );
-        }, 3000);
+      const data =
+        await response.json();
 
-      });
+      alert(data.message);
 
-  }, [searchParams, router]);
+      if(response.ok){
+
+        router.push(
+          "/auth/login"
+        );
+
+      }
+  };
 
   return (
     <div>
+
       <h1>
-        {message}
+        Verify Email
       </h1>
+
+      <input
+        value={otp}
+        onChange={(e)=>
+          setOtp(
+            e.target.value
+          )
+        }
+        placeholder="Enter OTP"
+      />
+
+      <button
+        onClick={verifyOTP}
+      >
+        Verify
+      </button>
+
     </div>
   );
 }
