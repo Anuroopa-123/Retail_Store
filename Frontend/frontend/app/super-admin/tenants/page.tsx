@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Layout from "@/app/components/layout/Layout";
 import "./tenants.css";
+import toast from "react-hot-toast";
 import { Tenant } from "@/src/types/tenant";
 
 export default function TenantPage() {
@@ -14,6 +15,8 @@ const [tenants, setTenants] =
 
   const [showForm, setShowForm] =
     useState(false);
+    const [searchTerm, setSearchTerm] =
+  useState("");
 
   const getTenants = async () => {
 
@@ -67,14 +70,39 @@ useEffect(() => {
     );
 
     if(response.ok){
+       toast.success(
+    "Tenant created successfully "
+  );
 
       setName("");
 
       setShowForm(false);
 
       getTenants();
+    } else {
+      toast.error(
+        "Failed to create tenant"
+      );
     }
+
+    
   };
+      const filteredTenants =
+  tenants.filter(
+    (tenant) =>
+      tenant.name
+        .toLowerCase()
+        .includes(
+          searchTerm.toLowerCase()
+        ) ||
+
+      tenant.slug
+        .toLowerCase()
+        .includes(
+          searchTerm.toLowerCase()
+        )
+  );
+  
 
   return (
 
@@ -95,10 +123,16 @@ useEffect(() => {
 
       </div>
 
-      <input
-        className="search-box"
-        placeholder="Search Tenant"
-      />
+    <input
+  className="search-box"
+  placeholder="Search Tenant..."
+  value={searchTerm}
+  onChange={(e) =>
+    setSearchTerm(
+      e.target.value
+    )
+  }
+/>
 
       {showForm && (
 
@@ -146,7 +180,7 @@ useEffect(() => {
 
           <tbody>
 
-            {tenants.map(
+            {filteredTenants.map(
               (tenant,index)=>(
                 <tr
                   key={tenant.id}
@@ -163,9 +197,15 @@ useEffect(() => {
                     {tenant.slug}
                   </td>
 
-                  <td>
-                    {tenant.status}
-                  </td>
+              <td>
+
+  <span
+    className={`status-badge ${tenant.status}`}
+  >
+    {tenant.status}
+  </span>
+
+</td>
                 </tr>
               )
             )}
