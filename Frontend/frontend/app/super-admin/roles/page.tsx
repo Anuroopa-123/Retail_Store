@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Layout from "@/app/components/layout/Layout";
 import "./roles.css";
+import toast from "react-hot-toast";
 
 interface Role {
   id: number;
@@ -136,13 +137,16 @@ export default function RolesPage() {
 
       if (!response.ok) {
 
-        alert(
-          result.detail ||
-          "Failed to create role"
-        );
+        toast.error(
+  result.detail ||
+  "Failed to create role"
+);
 
         return;
       }
+      toast.success(
+  "Role created successfully"
+);
 
       setRoleName("");
 
@@ -188,6 +192,9 @@ export default function RolesPage() {
 
         return;
       }
+      toast.success(
+  "Role updated successfully"
+);
 
       setRoleName("");
 
@@ -234,6 +241,9 @@ export default function RolesPage() {
 
         return;
       }
+toast.success(
+  "Role deleted successfully"
+);
 
       loadRoles();
 
