@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Layout from "@/app/components/layout/Layout";
 import "./stores.css";
+import toast from "react-hot-toast";
 import { Tenant } from "@/src/types/tenant";
 
 export default function StorePage() {
@@ -32,9 +33,11 @@ const [tenants,setTenants] =
 
   },[]);
 
-  const createStore = async()=>{
+ const createStore = async () => {
 
-    await fetch(
+  try {
+
+    const response = await fetch(
       "http://127.0.0.1:8000/api/v1/stores",
       {
         method:"POST",
@@ -56,7 +59,36 @@ const [tenants,setTenants] =
         })
       }
     );
-  };
+
+    if(response.ok){
+
+      toast.success(
+        "Store created successfully "
+      );
+
+      setTenantId("");
+      setName("");
+      setEmail("");
+      setPhone("");
+
+    } else {
+
+      const error =
+        await response.json();
+
+      toast.error(
+        error.detail ||
+        "Failed to create store"
+      );
+    }
+
+  } catch {
+
+    toast.error(
+      "Server connection failed"
+    );
+  }
+};
 
   return(
 
