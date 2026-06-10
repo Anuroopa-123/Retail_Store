@@ -401,3 +401,31 @@ body {
   .left-panel { display: none; }
   .right-panel { padding: 40px 32px; }
 }
+.password-field{
+
+  padding-right:50px !important;
+}
+
+.password-eye{
+
+  position:absolute;
+
+  right:16px;
+
+  bottom:15px;
+
+  font-size:18px;
+
+  color:#8B8BA0;
+
+  cursor:pointer;
+
+  z-index:10;
+
+  transition:.3s;
+}
+
+.password-eye:hover{
+
+  color:#8B5CF6;
+}

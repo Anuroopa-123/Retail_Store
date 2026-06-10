@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import Layout from "@/app/components/layout/Layout";
 import "./admins.css";
 import toast from "react-hot-toast";
+import {
+  FaEye,
+  FaEyeSlash
+} from "react-icons/fa";
 
 interface Tenant {
   id: number;
@@ -47,6 +51,9 @@ export default function AdminPage() {
 
   const [password, setPassword] =
     useState("");
+    const [showPassword,
+  setShowPassword] =
+    useState(false);
 
   const loadAdmins = async () => {
 
@@ -270,16 +277,39 @@ export default function AdminPage() {
             }
           />
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) =>
-              setPassword(
-                e.target.value
-              )
-            }
-          />
+          <div className="password-wrapper">
+
+  <input
+    type={
+      showPassword
+        ? "text"
+        : "password"
+    }
+    placeholder="Password"
+    value={password}
+    onChange={(e) =>
+      setPassword(
+        e.target.value
+      )
+    }
+  />
+
+  <span
+    className="eye-icon"
+    onClick={() =>
+      setShowPassword(
+        !showPassword
+      )
+    }
+  >
+    {
+      showPassword
+        ? <FaEyeSlash />
+        : <FaEye />
+    }
+  </span>
+
+</div>
 
           <button
             className="create-admin-btn"

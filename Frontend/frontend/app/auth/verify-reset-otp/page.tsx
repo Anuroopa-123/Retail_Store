@@ -13,7 +13,7 @@ const [otp, setOtp] =
 useState("");
 const [timeLeft,
   setTimeLeft] =
-    useState(120); // 2 mins
+    useState(60); // 2 mins
 
 const [loading, setLoading] =
 useState(false);

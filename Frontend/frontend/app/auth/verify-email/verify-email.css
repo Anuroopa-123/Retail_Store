@@ -125,3 +125,27 @@ body {
   }
 
 }
+
+.otp-timer{
+
+  margin-bottom:20px;
+
+  color:#fbbf24;
+
+  font-size:15px;
+
+  font-weight:600;
+}
+
+.otp-timer span{
+
+  display:block;
+
+  margin-top:6px;
+
+  font-size:24px;
+
+  font-weight:700;
+
+  color:#4f46e5;
+}

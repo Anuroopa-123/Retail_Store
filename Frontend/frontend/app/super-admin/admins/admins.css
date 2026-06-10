@@ -349,3 +349,72 @@
   }
 
 }
+
+.password-wrapper{
+
+  position:relative;
+
+  width:100%;
+
+  margin-bottom:18px;
+}
+
+.password-wrapper input{
+
+  width:100%;
+
+  height:60px;
+
+  padding:0 50px 0 18px;
+
+  border:2px solid #e5e7eb;
+
+  border-radius:16px;
+
+  background:#ffffff;
+
+  color:#111827;
+
+  font-size:15px;
+}
+
+.password-wrapper input:focus{
+
+  outline:none;
+
+  border-color:#c026d3;
+
+  box-shadow:
+    0 0 0 5px
+    rgba(
+      192,
+      38,
+      211,
+      .12
+    );
+}
+
+.eye-icon{
+
+  position:absolute;
+
+  right:18px;
+
+  top:50%;
+
+  transform:
+    translateY(-50%);
+
+  cursor:pointer;
+
+  color:#6b7280;
+
+  font-size:18px;
+
+  transition:.3s;
+}
+
+.eye-icon:hover{
+
+  color:#c026d3;
+}
