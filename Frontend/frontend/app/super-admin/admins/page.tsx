@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Layout from "@/app/components/layout/Layout";
 import "./admins.css";
+import toast from "react-hot-toast";
 
 interface Tenant {
   id: number;
@@ -151,17 +152,17 @@ export default function AdminPage() {
         const error =
           await response.json();
 
-        alert(
-          error.detail ||
-          "Failed to create admin"
-        );
+        toast.error(
+  error.detail ||
+  "Failed to create admin"
+);
 
         return;
       }
 
-      alert(
-        "Admin Created Successfully"
-      );
+   toast.success(
+  "Admin created successfully "
+);
 
       setTenantId("");
       setStoreId("");
@@ -175,9 +176,9 @@ export default function AdminPage() {
 
       console.error(error);
 
-      alert(
-        "Something went wrong"
-      );
+      toast.error(
+  "Something went wrong"
+);
     }
   };
 
