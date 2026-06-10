@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import "./verify-reset-otp.css";
@@ -11,44 +11,104 @@ const router = useRouter();
 
 const [otp, setOtp] =
 useState("");
+const [timeLeft,
+  setTimeLeft] =
+    useState(120); // 2 mins
 
 const [loading, setLoading] =
 useState(false);
 
+useEffect(() => {
+
+  if (timeLeft <= 0) {
+
+    toast.error(
+      "OTP Expired"
+    );
+
+    router.push(
+      "/auth/forgot-password"
+    );
+
+    return;
+  }
+
+  const timer =
+    setInterval(() => {
+
+      setTimeLeft(
+        (prev) => prev - 1
+      );
+
+    }, 1000);
+
+  return () =>
+    clearInterval(timer);
+
+}, [timeLeft, router]);
+
 const verifyOtp = async () => {
 
+  if (!otp) {
 
-if (!otp) {
+    toast.error(
+      "Enter OTP"
+    );
 
-  toast.error(
-    "Enter OTP"
-  );
+    return;
+  }
 
-  return;
-}
+  setLoading(true);
 
-setLoading(true);
+  try {
 
-try {
+    const response =
+      await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/reset-password?token=${otp}`
+      );
 
-  router.push(
-    `/auth/reset-password?token=${otp}`
-  );
+    const data =
+      await response.json();
 
-} catch (error) {
+    if (!response.ok) {
 
-  console.error(error);
+      toast.error(
+        data.detail
+      );
 
-  toast.error(
-    "OTP verification failed"
-  );
-} finally {
+      return;
+    }
 
-  setLoading(false);
-}
+    toast.success(
+      "OTP Verified"
+    );
 
+    router.push(
+      `/auth/reset-password?token=${otp}`
+    );
 
+  } catch (error) {
+
+    console.error(error);
+
+    toast.error(
+      "OTP verification failed"
+    );
+
+  } finally {
+
+    setLoading(false);
+  }
 };
+
+
+const minutes =
+  Math.floor(
+    timeLeft / 60
+  );
+
+const seconds =
+  timeLeft % 60;
 
 return (
 
@@ -69,6 +129,23 @@ return (
       Enter the OTP sent to
       your email address.
     </p>
+    <div className="otp-timer">
+
+  OTP expires in
+
+  <span>
+
+    {String(minutes)
+      .padStart(2,"0")}
+
+    :
+
+    {String(seconds)
+      .padStart(2,"0")}
+
+  </span>
+
+</div>
 
     <input
       type="text"

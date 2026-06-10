@@ -263,7 +263,7 @@ async def forgot_password(
         999999
     )
 )
-    expires_at = datetime.now(timezone.utc) + timedelta(hours=1)
+    expires_at = datetime.now(timezone.utc) + timedelta(minutes=1)
 
     await service.create_password_reset_token(
         user_id=user.id,
