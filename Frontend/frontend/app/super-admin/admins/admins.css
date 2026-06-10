@@ -1,62 +1,210 @@
-.page-container {
-  padding: 30px;
+.page-container{
+  padding:30px;
 }
 
-.page-title {
-  color: #8e1697;
-  margin-bottom: 25px;
+.page-title{
+  font-size:32px;
+  font-weight:700;
+
+  background:linear-gradient(
+    135deg,
+    #c026d3,
+    #7c3aed
+  );
+
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+
+  margin-bottom:25px;
 }
 
-.admin-card {
-  background: #fff;
-  padding: 25px;
-  border-radius: 16px;
-  box-shadow: 0 10px 20px rgba(0,0,0,.08);
-  margin-bottom: 30px;
+/* FORM CARD */
+
+.admin-card{
+
+  background:
+  linear-gradient(
+    145deg,
+    rgba(255,255,255,.97),
+    rgba(255,255,255,.92)
+  );
+
+  backdrop-filter:blur(15px);
+
+  padding:35px;
+
+  border-radius:24px;
+
+  border:1px solid
+  rgba(255,255,255,.2);
+
+  box-shadow:
+  0 25px 60px rgba(
+    0,
+    0,
+    0,
+    .15
+  );
+
+  margin-bottom:35px;
 }
 
 .admin-card select,
-.admin-card input {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  font-size: 15px;
+.admin-card input{
+
+  width:100%;
+
+  height:60px;
+
+  padding:0 18px;
+
+  margin-bottom:18px;
+
+  border:2px solid #e5e7eb;
+
+  border-radius:16px;
+
+  background:#ffffff;
+
+  color:#111827;
+
+  font-size:15px;
+
+  transition:.3s;
+}
+
+.admin-card input::placeholder{
+  color:#9ca3af;
 }
 
 .admin-card select:focus,
-.admin-card input:focus {
-  outline: none;
-  border-color: #8e1697;
+.admin-card input:focus{
+
+  outline:none;
+
+  border-color:#c026d3;
+
+  box-shadow:
+  0 0 0 5px
+  rgba(
+    192,
+    38,
+    211,
+    .12
+  );
 }
 
-.create-admin-btn {
-  background: linear-gradient(
+/* BUTTON */
+
+.create-admin-btn{
+
+  width:220px;
+
+  height:56px;
+
+  border:none;
+
+  border-radius:16px;
+
+  color:white;
+
+  font-size:16px;
+
+  font-weight:700;
+
+  cursor:pointer;
+
+  background:
+  linear-gradient(
     135deg,
-    #8e1697,
-    #c71585
+    #c026d3,
+    #7c3aed
   );
 
-  color: white;
-  border: none;
-  padding: 14px 22px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
+  transition:.3s;
 }
 
-.create-admin-btn:hover {
-  opacity: .9;
+.create-admin-btn:hover{
+
+  transform:
+    translateY(-3px);
+
+  box-shadow:
+  0 15px 35px rgba(
+    124,
+    58,
+    237,
+    .35
+  );
 }
 
-.admin-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 10px 20px rgba(0,0,0,.08);
+/* TABLE */
+
+.admin-table{
+
+  width:100%;
+
+  border-collapse:collapse;
+
+  overflow:hidden;
+
+  border-radius:24px;
+
+  background:#ffffff;
+
+  box-shadow:
+  0 20px 50px rgba(
+    0,
+    0,
+    0,
+    .15
+  );
+}
+
+.admin-table th{
+
+  background:
+  linear-gradient(
+    135deg,
+    #c026d3,
+    #7c3aed
+  );
+
+  color:white;
+
+  padding:18px;
+
+  font-size:15px;
+
+  letter-spacing:.5px;
+}
+
+.admin-table td{
+
+  color:#111827;
+
+  padding:18px;
+
+  border-bottom:
+  1px solid #f3f4f6;
+}
+
+.admin-table tbody tr{
+  transition:.3s;
+}
+
+.admin-table tbody tr:hover{
+
+  background:
+  rgba(
+    124,
+    58,
+    237,
+    .05
+  );
+
+  transform:
+    scale(1.002);
 }
 
 .admin-table th {
@@ -83,4 +231,121 @@
 .active {
   color: green;
   font-weight: 600;
+}
+.admin-card input,
+.admin-card select {
+  color: #111827 !important;
+  background: #ffffff;
+}
+
+.admin-card input::placeholder {
+  color: #9ca3af;
+}
+
+.admin-card select option {
+  color: #111827;
+}
+
+.status-badge{
+
+  display:inline-flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  padding:8px 14px;
+
+  border-radius:50px;
+
+  font-size:13px;
+
+  font-weight:600;
+
+  text-transform:capitalize;
+}
+
+/* ACTIVE */
+
+.status-badge.active{
+
+  background:
+    rgba(
+      34,
+      197,
+      94,
+      .15
+    );
+
+  color:#22c55e;
+
+  animation:
+    pulseStatus 1.5s infinite;
+}
+
+/* PENDING */
+
+.status-badge.pending{
+
+  background:
+    rgba(
+      251,
+      191,
+      36,
+      .15
+    );
+
+  color:#f59e0b;
+}
+
+/* INACTIVE */
+
+.status-badge.inactive{
+
+  background:
+    rgba(
+      239,
+      68,
+      68,
+      .15
+    );
+
+  color:#ef4444;
+}
+
+@keyframes pulseStatus{
+
+  0%{
+    box-shadow:
+      0 0 0 0
+      rgba(
+        34,
+        197,
+        94,
+        .5
+      );
+  }
+
+  70%{
+    box-shadow:
+      0 0 0 10px
+      rgba(
+        34,
+        197,
+        94,
+        0
+      );
+  }
+
+  100%{
+    box-shadow:
+      0 0 0 0
+      rgba(
+        34,
+        197,
+        94,
+        0
+      );
+  }
+
 }

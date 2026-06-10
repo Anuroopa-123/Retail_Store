@@ -318,16 +318,15 @@ export default function AdminPage() {
                     {admin.email}
                   </td>
 
-                  <td
-                    className={
-                      admin.status ===
-                      "active"
-                        ? "active"
-                        : "pending"
-                    }
-                  >
-                    {admin.status}
-                  </td>
+                <td>
+
+  <span
+    className={`status-badge ${admin.status}`}
+  >
+    {admin.status}
+  </span>
+
+</td>
 
                 </tr>
 
