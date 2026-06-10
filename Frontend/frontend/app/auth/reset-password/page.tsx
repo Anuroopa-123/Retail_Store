@@ -1,97 +1,271 @@
 "use client";
 
+import {
+useSearchParams,
+useRouter
+} from "next/navigation";
+
 import { useState } from "react";
+import toast from "react-hot-toast";
+import "./reset-password.css";
+import {
+  FaEye,
+  FaEyeSlash
+} from "react-icons/fa";
 
 export default function ResetPasswordPage() {
 
-  const [token, setToken] =
+const params =
+useSearchParams();
+
+const router =
+useRouter();
+const [showPassword,
+  setShowPassword] =
+    useState(false);
+
+const [showConfirmPassword,
+  setShowConfirmPassword] =
+    useState(false);
+    const [passwordError,
+  setPasswordError] =
     useState("");
 
-  const [password,
-    setPassword] =
-      useState("");
+const token =
+params.get("token") || "";
 
-  const reset = async () => {
+const [password,
+setPassword] =
+useState("");
 
-    const response =
-      await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/reset-password`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify({
-            token,
-            new_password:
-              password,
-          }),
-        }
-      );
+const [confirmPassword,
+setConfirmPassword] =
+useState("");
 
-    const data =
-      await response.json();
+const [loading,
+setLoading] =
+useState(false);
 
-    alert(
-      data.message ||
+const reset = async () => {
+
+
+if (
+  password !==
+  confirmPassword
+) {
+
+  setPasswordError(
+    "Passwords do not match"
+  );
+
+  return;
+}
+
+setPasswordError("");
+
+setLoading(true);
+
+try {
+
+  const response =
+    await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/reset-password`,
+      {
+        method:"POST",
+
+        headers:{
+          "Content-Type":
+            "application/json",
+        },
+
+        body:JSON.stringify({
+          token,
+          new_password:
+            password,
+        }),
+      }
+    );
+
+  const data =
+    await response.json();
+
+  if(!response.ok){
+
+    toast.error(
       data.detail
     );
-  };
 
-  return (
-    <div className="login-container">
+    return;
+  }
 
-      <div className="left-panel">
+  toast.success(
+    "Password updated"
+  );
 
-        <div className="login-form">
+  setTimeout(() => {
 
-          <h1>
-            Reset Password
-          </h1>
+    router.push(
+      "/auth/login"
+    );
 
-          <div className="input-group">
-            <input
-              placeholder="Token"
-              value={token}
-              onChange={(e) =>
-                setToken(
-                  e.target.value
-                )
-              }
-            />
-          </div>
+  },1500);
 
-          <div className="input-group">
-            <input
-              type="password"
-              placeholder="New Password"
-              value={password}
-              onChange={(e) =>
-                setPassword(
-                  e.target.value
-                )
-              }
-            />
-          </div>
+} catch(error){
 
-          <button
-            className="login-btn"
-            onClick={reset}
-          >
-            Reset Password
-          </button>
+  console.error(error);
 
-        </div>
+  toast.error(
+    "Something went wrong"
+  );
+} finally {
 
-      </div>
+  setLoading(false);
+}
 
-      <div className="right-panel">
-        <h2>
-          Retail Store
-        </h2>
-      </div>
+
+};
+
+return (
+
+
+<div className="reset-container">
+
+  <div className="reset-card">
+
+    <div className="reset-icon">
+      🔑
+    </div>
+
+    <h1>
+      Reset Password
+    </h1>
+
+    <p>
+      Enter your new password.
+    </p>
+<div className="input-group">
+
+  <label>
+    New Password
+  </label>
+
+  <div className="password-wrapper">
+
+    <input
+      type={
+        showPassword
+          ? "text"
+          : "password"
+      }
+      placeholder="Enter New Password"
+      value={password}
+      onChange={(e) =>
+        setPassword(
+          e.target.value
+        )
+      }
+    />
+
+    <span
+      className="eye-icon"
+      onClick={() =>
+        setShowPassword(
+          !showPassword
+        )
+      }
+    >
+      {
+        showPassword
+          ? <FaEyeSlash />
+          : <FaEye />
+      }
+    </span>
+
+  </div>
+
+</div>
+
+<div className="input-group">
+
+  <label>
+    Confirm Password
+  </label>
+
+  <div className="password-wrapper">
+
+    <input
+      type={
+        showConfirmPassword
+          ? "text"
+          : "password"
+      }
+      placeholder="Confirm Password"
+      value={confirmPassword}
+     onChange={(e) => {
+
+  setConfirmPassword(
+    e.target.value
+  );
+
+  if (
+    password !==
+    e.target.value
+  ) {
+
+    setPasswordError(
+      "Passwords do not match"
+    );
+
+  } else {
+
+    setPasswordError("");
+  }
+}}
+    />
+
+    <span
+      className="eye-icon"
+      onClick={() =>
+        setShowConfirmPassword(
+          !showConfirmPassword
+        )
+      }
+    >
+      {
+        showConfirmPassword
+          ? <FaEyeSlash />
+          : <FaEye />
+      }
+    </span>
+
+  </div>
+
+</div>
+{
+  passwordError && (
+
+    <div className="password-error">
+
+      {passwordError}
 
     </div>
-  );
+
+  )
+}
+    <button
+      onClick={reset}
+    >
+      {
+        loading
+          ? "Updating..."
+          : "Reset Password"
+      }
+    </button>
+
+  </div>
+
+</div>
+
+
+);
 }

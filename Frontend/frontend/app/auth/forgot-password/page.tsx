@@ -1,77 +1,148 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import "./forgot-password.css";
 
 export default function ForgotPasswordPage() {
 
-  const [email, setEmail] =
-    useState("");
+const router = useRouter();
 
-  const submit = async () => {
+const [email, setEmail] =
+useState("");
 
-    const response =
-      await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/forgot-password`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify({
-            email,
-          }),
-        }
-      );
+const [loading, setLoading] =
+useState(false);
 
-    const data =
-      await response.json();
+const handleSubmit = async (
+e: React.FormEvent
+) => {
 
-    alert(
-      data.message
+e.preventDefault();
+
+setLoading(true);
+
+try {
+
+  const response =
+    await fetch(
+      "http://127.0.0.1:8000/api/v1/auth/forgot-password",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body: JSON.stringify({
+          email,
+        }),
+      }
     );
-  };
 
-  return (
-    <div className="login-container">
+  const data =
+    await response.json();
 
-      <div className="left-panel">
+  if (!response.ok) {
 
-        <div className="login-form">
+    toast.error(
+      data.detail ||
+      "Failed to send OTP"
+    );
 
-          <h1>
-            Forgot Password
-          </h1>
+    return;
+  }
 
-          <div className="input-group">
-            <input
-              placeholder="Email"
-              value={email}
-              onChange={(e) =>
-                setEmail(
-                  e.target.value
-                )
-              }
-            />
-          </div>
-
-          <button
-            className="login-btn"
-            onClick={submit}
-          >
-            Send Reset Link
-          </button>
-
-        </div>
-
-      </div>
-
-      <div className="right-panel">
-        <h2>
-          Retail Store
-        </h2>
-      </div>
-
-    </div>
+  toast.success(
+    "OTP sent to your email"
   );
+
+  setTimeout(() => {
+
+   router.push(
+  `/auth/verify-reset-otp?email=${email}`
+);
+
+  }, 1500);
+
+} catch (error) {
+
+  console.error(error);
+
+  toast.error(
+    "Unable to connect to server"
+  );
+} finally {
+
+  setLoading(false);
+}
+
+
+};
+
+return (
+
+<div className="forgot-container">
+
+  <div className="forgot-card">
+
+    <div className="forgot-icon">
+      🔑
+    </div>
+
+    <h1>
+      Forgot Password
+    </h1>
+
+    <p>
+      Enter your registered email
+      address and we will send a
+      verification code.
+    </p>
+
+    <form
+      onSubmit={handleSubmit}
+    >
+
+      <div className="input-group">
+
+        <label>
+          Email Address
+        </label>
+
+        <input
+          type="email"
+          placeholder="john@example.com"
+          value={email}
+          onChange={(e) =>
+            setEmail(
+              e.target.value
+            )
+          }
+          required
+        />
+
+      </div>
+
+      <button
+        type="submit"
+        disabled={loading}
+      >
+
+        {loading
+          ? "Sending OTP..."
+          : "Send OTP"}
+
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+);
 }
