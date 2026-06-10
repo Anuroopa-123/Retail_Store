@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import "./login.css";
+import {
+  FaEye,
+  FaEyeSlash
+} from "react-icons/fa";
 import { generateCaptcha } from "@/src/lib/captcha";
 import {
   useAuth
@@ -16,6 +20,9 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword,
+  setShowPassword] =
+    useState(false);
 
   const [captcha, setCaptcha] = useState(
     () => generateCaptcha()
@@ -247,31 +254,49 @@ alert(data.detail);
             </div>
 
             {/* PASSWORD */}
+<div className="input-wrapper">
 
-            <div className="input-wrapper">
+  <label className="input-label">
+    Password
+  </label>
 
-              <label className="input-label">
-                Password
-              </label>
+  <span className="input-icon">
+    🔒
+  </span>
 
-              <span className="input-icon">
-                🔒
-              </span>
+  <input
+    className="input-field password-field"
+    type={
+      showPassword
+        ? "text"
+        : "password"
+    }
+    placeholder="••••••••"
+    value={password}
+    onChange={(e) =>
+      setPassword(
+        e.target.value
+      )
+    }
+    required
+  />
 
-              <input
-                className="input-field"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) =>
-                  setPassword(
-                    e.target.value
-                  )
-                }
-                required
-              />
+  <span
+    className="password-eye"
+    onClick={() =>
+      setShowPassword(
+        !showPassword
+      )
+    }
+  >
+    {
+      showPassword
+        ? <FaEyeSlash />
+        : <FaEye />
+    }
+  </span>
 
-            </div>
+</div>
 
             {/* CAPTCHA */}
 
