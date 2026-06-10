@@ -5,12 +5,27 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
+from slowapi.middleware import SlowAPIMiddleware
+from src.infrastructure.security.rate_limit import limiter
+
+from starlette.middleware.trustedhost import TrustedHostMiddleware
+from src.infrastructure.security.middleware import SecurityHeadersMiddleware
 
 from src.configuration.config import config
 from src.application.exception_handler import DomainError
 from src.presentation.api.auth.router import router as auth_router
 from src.presentation.api.roles.router import router as roles_router
 from src.presentation.api.user.router import router as user_router
+
+from src.presentation.api.tenant.router import (
+    router as tenant_router
+)
+from src.presentation.api.store.router import (
+    router as store_router
+)
+from src.presentation.api.admin.router import (
+    router as admin_router
+)
 
 
 # ── lifespan ─────────────────────────────────────────────────────────────────
@@ -27,6 +42,7 @@ async def lifespan(app: FastAPI):
     # shutdown
     await engine.dispose()
     print("✓ DB connections closed")
+    
 
 
 # ── app ───────────────────────────────────────────────────────────────────────
@@ -39,11 +55,27 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+app.state.limiter = limiter
+app.add_middleware(SlowAPIMiddleware)
+
+# ── security middleware ───────────────────────────────────────────────────────
+
+
+# app.add_middleware(
+#     TrustedHostMiddleware,
+#     allowed_hosts=[
+#         "localhost",
+#         "127.0.0.1",
+#     ]
+# )
+
+app.add_middleware(SecurityHeadersMiddleware)
+
 # ── middleware ────────────────────────────────────────────────────────────────
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=config.ALLOWED_HOSTS_LIST,
+    allow_origins=config.CORS_ORIGINS_LIST,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -73,6 +105,18 @@ async def domain_error_handler(request: Request, exc: DomainError):
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(roles_router, prefix="/api/v1")
 app.include_router(user_router, prefix="/api/v1")
+app.include_router(
+    tenant_router,
+    prefix="/api/v1"
+)
+app.include_router(
+    store_router,
+    prefix="/api/v1"
+)
+app.include_router(
+    admin_router,
+    prefix="/api/v1"
+)
 
 # ── health ────────────────────────────────────────────────────────────────────
 

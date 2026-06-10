@@ -9,28 +9,28 @@ class EmailService:
 
     @staticmethod
     async def send_verification_email(to: str, token: str) -> None:
-        link = f"{config.APP_URL}/api/v1/auth/verify-email?token={token}"
+        link = f"{config.APP_URL}/verify-email?token={token}"
         css = get_email_css()
         message = MessageSchema(
-            subject="Verify your email address",
-            recipients=[to],
-            body=f"""
-            <html><head><style>{css}</style></head>
-            <body>
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
-                    <h2>Verify your email</h2>
-                    <p>Thanks for signing up. Click below to activate your account.</p>
-                    <a href="{link}"
-                       style="display:inline-block; padding:12px 24px; background:#4F46E5;
-                              color:#fff; border-radius:6px; text-decoration:none;">
-                        Verify Email
-                    </a>
-                    <p style="margin-top:16px; color:#6B7280; font-size:13px;">
-                        Expires in 24 hours. If you didn't sign up, ignore this.
-                    </p>
-                </div>
-            </body></html>
-            """,
+        subject="Verify Email",
+        recipients=[to],
+        body=f"""
+        <html>
+        <body>
+        <div style="font-family:Arial">
+
+        <h2>Email Verification</h2>
+
+        <p>Your verification code is:</p>
+
+        <h1>{token}</h1>
+
+        <p>Expires in 24 hours.</p>
+
+        </div>
+        </body>
+        </html>
+        """,
             subtype=MessageType.html,
         )
         await fm.send_message(message)

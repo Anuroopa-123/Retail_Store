@@ -35,6 +35,15 @@ class Config(BaseSettings):
     MAIL_PASSWORD: str
     MAIL_FROM: str = "noreply@retailstore.com"
     MAIL_FROM_NAME: str = "RetailStore"
+    
+    CORS_ORIGINS: str = "http://localhost:3000"
+
+    @property
+    def CORS_ORIGINS_LIST(self):
+        return [
+            origin.strip()
+            for origin in self.CORS_ORIGINS.split(",")
+        ]
 
     @property
     def ALLOWED_HOSTS_LIST(self) -> list[str]:

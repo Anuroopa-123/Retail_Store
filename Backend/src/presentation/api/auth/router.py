@@ -6,12 +6,14 @@ from datetime import timedelta, datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from jose import JWTError
-
+from fastapi import Request
 from src.infrastructure.database.postgresql import get_session
 from src.infrastructure.auth.security import (
     verify_password, create_access_token,
     create_refresh_token, decode_token,
 )
+import random
+from fastapi import Body
 from src.infrastructure.email_service import EmailService
 from src.application.models.auth.auth_user_model import (
     RegisterRequest, LoginRequest,
@@ -33,6 +35,8 @@ from sqlalchemy import select
 from src.domain.entities.tenant import Tenant
 from src.domain.entities.store import Store
 from src.infrastructure.auth.security import hash_password
+# from src.main import limiter
+from src.infrastructure.security.rate_limit import limiter
 
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -69,7 +73,12 @@ async def register(
         )
     )
 
-    raw_token = secrets.token_urlsafe(32)
+    raw_token = str(
+    random.randint(
+        100000,
+        999999
+    )
+)
     expires_at = datetime.now(timezone.utc) + timedelta(hours=24)
 
     await service.create_email_verification_token(
@@ -117,9 +126,41 @@ async def verify_email(
 
     return {"message": "Email verified successfully. You can now log in."}
 
+@router.post("/verify-otp")
+async def verify_otp(
+    token: str,
+    db: AsyncSession = Depends(get_session)
+):
+    service = UserService(db)
 
+    try:
+        await service.verify_email(
+            token_hash=token
+        )
+
+        await db.commit()
+
+        return {
+            "message":
+            "Email verified successfully"
+        }
+
+    except TokenInvalidError:
+        raise HTTPException(
+            400,
+            "Invalid OTP"
+        )
+
+    except TokenExpiredError:
+        raise HTTPException(
+            400,
+            "OTP expired"
+        )
+
+# @limiter.limit("5/minute")
 @router.post("/login", response_model=TokenResponse)
 async def login(
+    # request: Request,
     body: LoginRequest,
     db: AsyncSession = Depends(get_session),
 ):
@@ -216,8 +257,13 @@ async def forgot_password(
     except Exception:
         return {"message": "If that email exists, a reset link has been sent."}
 
-    raw_token = secrets.token_urlsafe(32)
-    expires_at = datetime.now(timezone.utc) + timedelta(hours=1)
+    raw_token = str(
+    random.randint(
+        100000,
+        999999
+    )
+)
+    expires_at = datetime.now(timezone.utc) + timedelta(minutes=1)
 
     await service.create_password_reset_token(
         user_id=user.id,

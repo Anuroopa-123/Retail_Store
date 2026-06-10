@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from typing import Optional, List, TypedDict
 from datetime import datetime, timezone
+from unittest import result
 from sqlalchemy import select, delete, func
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -87,14 +88,16 @@ class UserRepository:
     async def get_by_email(self, email: str) -> Optional[User]:
         return await self._get_user_with_roles(User.email, email)
 
-    async def get_authenticate_by_email(self, email: str) -> Optional[User]:
-        """Used for login — active users only, roles eager-loaded for permission checks."""
+    async def get_authenticate_by_email(
+    self,
+    email: str
+    ):
         result = await self.session.execute(
             select(User)
-            .where(User.email == email)
-            .where(User.status == "active")
-            .options(selectinload(User.roles))
-        )
+           .where(User.email == email)
+           .options(selectinload(User.roles))
+     )
+
         return result.scalar_one_or_none()
 
     async def get_all_by_tenant(
