@@ -78,7 +78,7 @@ async def create_admin(
 
     expires_at = (
     datetime.now(timezone.utc)
-    + timedelta(hours=24)
+    + timedelta(minutes=1)
     )
 
     await service.create_email_verification_token(

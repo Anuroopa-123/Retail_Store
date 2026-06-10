@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useRouter } from "next/navigation";
 import "./verify-email.css";
 
@@ -16,6 +16,45 @@ export default function VerifyEmail() {
 
   const [otp, setOtp] =
     useState("");
+    const [timeLeft,
+  setTimeLeft] =
+    useState(60);
+
+    useEffect(() => {
+
+  if (timeLeft <= 0) {
+
+    toast.error(
+      "OTP Expired"
+    );
+
+    setTimeout(() => {
+
+      router.push(
+        "/auth/login"
+      );
+
+    }, 1000);
+
+    return;
+  }
+
+  const timer =
+    setInterval(() => {
+
+      setTimeLeft(
+        (prev) => prev - 1
+      );
+
+    }, 1000);
+
+  return () =>
+    clearInterval(timer);
+
+}, [timeLeft, router]);
+
+
+
 
   const verifyOTP =
     async () => {
@@ -61,6 +100,13 @@ export default function VerifyEmail() {
 
       
   };
+  const minutes =
+  Math.floor(
+    timeLeft / 60
+  );
+
+const seconds =
+  timeLeft % 60;
 
  return (
   <div className="verify-container">
@@ -79,6 +125,23 @@ export default function VerifyEmail() {
         Enter the 6 digit OTP sent
         to your email address.
       </p>
+      <div className="otp-timer">
+
+  OTP expires in
+
+  <span>
+
+    {String(minutes)
+      .padStart(2, "0")}
+
+    :
+
+    {String(seconds)
+      .padStart(2, "0")}
+
+  </span>
+
+</div>
 
       <input
         className="otp-input"
