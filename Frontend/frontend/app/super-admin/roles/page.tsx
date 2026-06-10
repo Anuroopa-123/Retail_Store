@@ -4,6 +4,11 @@ import { useEffect, useState } from "react";
 import Layout from "@/app/components/layout/Layout";
 import "./roles.css";
 import toast from "react-hot-toast";
+import {
+  FaEdit,
+  FaTrash,
+  FaExclamationTriangle
+} from "react-icons/fa";
 
 interface Role {
   id: number;
@@ -20,6 +25,12 @@ export default function RolesPage() {
 
   const [roles, setRoles] =
     useState<Role[]>([]);
+
+    const [showDeleteModal, setShowDeleteModal] =
+  useState(false);
+
+const [selectedRoleId, setSelectedRoleId] =
+  useState<number | null>(null);
 
   const [tenants, setTenants] =
     useState<Tenant[]>([]);
@@ -210,48 +221,50 @@ export default function RolesPage() {
     }
   };
 
-  const deleteRole = async (
-    roleId: number
-  ) => {
+  const deleteRole = async () => {
 
-    const confirmed =
-      confirm(
-        "Delete this role?"
+  if (!selectedRoleId) {
+    return;
+  }
+
+  try {
+
+    const response =
+      await fetch(
+        `http://127.0.0.1:8000/api/v1/roles/${selectedRoleId}`,
+        {
+          method: "DELETE"
+        }
       );
 
-    if (!confirmed) {
+    if (!response.ok) {
+
+      toast.error(
+        "Failed to delete role"
+      );
+
       return;
     }
 
-    try {
+    toast.success(
+      "Role deleted successfully"
+    );
 
-      const response =
-        await fetch(
-          `http://127.0.0.1:8000/api/v1/roles/${roleId}`,
-          {
-            method: "DELETE"
-          }
-        );
+    setShowDeleteModal(false);
 
-      if (!response.ok) {
+    setSelectedRoleId(null);
 
-        alert(
-          "Failed to delete role"
-        );
+    loadRoles();
 
-        return;
-      }
-toast.success(
-  "Role deleted successfully"
-);
+  } catch (error) {
 
-      loadRoles();
+    console.error(error);
 
-    } catch (error) {
-
-      console.error(error);
-    }
-  };
+    toast.error(
+      "Something went wrong"
+    );
+  }
+};
 
   return (
 
@@ -372,6 +385,57 @@ toast.success(
           </div>
 
         )}
+        {showDeleteModal && (
+
+  <div className="modal-overlay">
+
+    <div className="delete-modal">
+
+   <div className="delete-icon warning">
+  <FaExclamationTriangle />
+</div>
+
+      <h2>
+        Delete Role?
+      </h2>
+
+      <p>
+        Are you sure you want to
+        delete this role?
+      </p>
+
+      <div className="delete-actions">
+
+        <button
+          className="cancel-btn"
+          onClick={() => {
+
+            setShowDeleteModal(
+              false
+            );
+
+            setSelectedRoleId(
+              null
+            );
+          }}
+        >
+          Cancel
+        </button>
+
+        <button
+          className="confirm-delete-btn"
+          onClick={deleteRole}
+        >
+          Yes, Delete
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+)}
 
         <div className="roles-table">
 
@@ -410,38 +474,43 @@ toast.success(
                       {role.slug}
                     </td>
 
-                    <td>
+                  <td>
 
-                      <button
-                        className="edit-btn"
-                        onClick={() => {
+  <button
+    className="edit-btn"
+    onClick={() => {
 
-                          setEditingRoleId(
-                            role.id
-                          );
+      setEditingRoleId(
+        role.id
+      );
 
-                          setRoleName(
-                            role.name
-                          );
+      setRoleName(
+        role.name
+      );
 
-                          setShowModal(true);
-                        }}
-                      >
-                        Edit
-                      </button>
+      setShowModal(true);
+    }}
+  >
+    <FaEdit />
+    <span>Edit</span>
+  </button>
 
-                      <button
-                        className="delete-btn"
-                        onClick={() =>
-                          deleteRole(
-                            role.id
-                          )
-                        }
-                      >
-                        Delete
-                      </button>
+  <button
+    className="delete-btn"
+  onClick={() => {
 
-                    </td>
+  setSelectedRoleId(
+    role.id
+  );
+
+  setShowDeleteModal(true);
+}}
+  >
+    <FaTrash />
+    <span>Delete</span>
+  </button>
+
+</td>
 
                   </tr>
 
