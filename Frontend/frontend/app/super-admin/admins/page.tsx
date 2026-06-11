@@ -182,6 +182,7 @@ export default function AdminPage() {
 
   return (
     <Layout title="Admin Management">
+        <div className="admin-page">
       <div className="page-header">
         <div className="page-header-left">
           <h1>Tenant Admins</h1>
@@ -341,6 +342,8 @@ export default function AdminPage() {
           </tbody>
         </table>
       </div>
+      </div>
     </Layout>
+    
   );
 }

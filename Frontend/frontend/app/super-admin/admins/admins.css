@@ -1,22 +1,30 @@
 /* ===== ADMINS PAGE — SELF-CONTAINED (no @import) ===== */
 
-:root {
+.admin-page {
 
   --midnight: #faf5fb;
+  --surface: #ffffff;
+  --surface2: #f7e8f7;
+  --surface3: #eed3ee;
 
---surface: #ffffff;
+  --ivory: #8e1697;
+  --text: #8e1697;
+  --text-dim: #4b5563;
+  --muted: #6b7280;
+}
+.admin-page{
+   background:#faf5fb;
+   min-height:100vh;
+   padding:24px;
+}
+.admin-form-card,
+.table-card{
+   background:#ffffff;
+}
 
---surface2: #f7e8f7;
-
---surface3: #eed3ee;
-
---ivory: #8e1697;
-
---text: #8e1697;
-
---text-dim: #4b5563;
-
---muted: #6b7280;
+.custom-select__trigger,
+.input-with-icon input{
+   background:#ffffff;
 }
 
 /* PAGE HEADER */
