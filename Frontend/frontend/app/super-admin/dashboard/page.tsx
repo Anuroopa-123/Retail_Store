@@ -107,25 +107,25 @@ const [recentAdmins, setRecentAdmins] =
   <FaBuilding className="stat-icon" />
           <span className="tile-value">{stats.tenants}</span>
           <span className="tile-label">Active Tenants</span>
-          <span className="tile-change up">↑ 2 this month</span>
+          {/* <span className="tile-change up">↑ 2 this month</span> */}
         </div>
        <div className="stat-tile">
   <FaStore className="stat-icon" />
           <span className="tile-value">{stats.stores}</span>
           <span className="tile-label">Total Stores</span>
-          <span className="tile-change up">↑ 5 this month</span>
+          {/* <span className="tile-change up">↑ 5 this month</span> */}
         </div>
         <div className="stat-tile">
   <FaUsers className="stat-icon" />
           <span className="tile-value">{stats.admins}</span>
           <span className="tile-label">Tenant Admins</span>
-          <span className="tile-change up">↑ 1 this week</span>
+          {/* <span className="tile-change up">↑ 1 this week</span> */}
         </div>
        <div className="stat-tile">
   <FaKey className="stat-icon" />
           <span className="tile-value">{stats.roles}</span>
-          <span className="tile-label">Roles Defined</span>
-          <span className="tile-change up">Stable</span>
+          <span className="tile-label">Total Roles</span>
+          {/* <span className="tile-change up">Stable</span> */}
         </div>
       </div>
 
