@@ -180,9 +180,10 @@ const [recentAdmins, setRecentAdmins] =
         Admin {admin.name} created
       </div>
 
-      <div className="activity-time">
-        {admin.status || "Active"}
-      </div>
+   <div className="active-status">
+  <span className="active-dot"></span>
+  {admin.status || "Active"}
+</div>
     </div>
   ))
 ) : (
