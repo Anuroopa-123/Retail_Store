@@ -2,7 +2,22 @@
 
 import { useEffect, useState } from "react";
 import Layout from "@/app/components/layout/Layout";
-import "./dashboard.css";
+import "./superadmindashboard.css";
+
+import {
+  FaBuilding,
+  FaStore,
+  FaUsers,
+  FaKey,
+  FaUser,
+  FaInbox
+} from "react-icons/fa";
+
+import {
+  MdLightbulb,
+  MdTrendingUp,
+  MdWarning
+} from "react-icons/md";
 
 interface DashStats {
   tenants: number;
@@ -11,6 +26,11 @@ interface DashStats {
   roles: number;
 }
 
+interface Admin {
+  id: number;
+  name: string;
+  status?: string;
+}
 interface AIInsight {
   type: "tip" | "alert" | "forecast";
   message: string;
@@ -27,21 +47,30 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<DashStats>({ tenants: 0, stores: 0, admins: 0, roles: 0 });
   const [aiIdx, setAiIdx] = useState(0);
   const [aiLoading, setAiLoading] = useState(false);
+const [recentAdmins, setRecentAdmins] =
+  useState<Admin[]>([]);
 
   useEffect(() => {
     const load = async () => {
       try {
-        const [t, s, r] = await Promise.all([
+        const [t, s, r,a] = await Promise.all([
           fetch("http://127.0.0.1:8000/api/v1/tenants").then(r => r.json()),
           fetch("http://127.0.0.1:8000/api/v1/stores").then(r => r.json()),
           fetch("http://127.0.0.1:8000/api/v1/roles/").then(r => r.json()),
+          fetch("http://127.0.0.1:8000/api/v1/admins/").then(r => r.json()),
         ]);
+        
         setStats({
           tenants: Array.isArray(t) ? t.length : 0,
           stores:  Array.isArray(s) ? s.length : 0,
-          admins:  0,
+          admins: Array.isArray(a) ? a.length : 0,
           roles:   Array.isArray(r) ? r.length : 0,
         });
+        setRecentAdmins(
+          Array.isArray(a)
+    ? a.slice(-5).reverse()
+    : []
+);
       } catch { /* offline/demo */ }
     };
     load();
@@ -56,7 +85,7 @@ export default function DashboardPage() {
   };
 
   const insight = aiInsights[aiIdx];
-  const insightIcon = insight.type === "forecast" ? "📈" : insight.type === "alert" ? "⚠️" : "💡";
+  const insightIcon = insight.type === "forecast" ? <MdTrendingUp /> : insight.type === "alert" ? <MdWarning /> : <MdLightbulb />;
   const insightColor = insight.type === "forecast" ? "var(--green)" : insight.type === "alert" ? "var(--amber)" : "var(--violet-light)";
 
   return (
@@ -64,8 +93,8 @@ export default function DashboardPage() {
       {/* Page header */}
       <div className="page-header">
         <div className="page-header-left">
-          <h1>Good morning, Admin 👋</h1>
-          <p>Here's what's happening across your retail network today.</p>
+          <h1>Good morning, Admin</h1>
+          <p>Here what happening across your retail network today.</p>
         </div>
         <span className="dash-date">
           {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
@@ -74,22 +103,26 @@ export default function DashboardPage() {
 
       {/* Stats */}
       <div className="stats-row">
-        <div className="stat-tile" data-icon="🏢">
+        <div className="stat-tile">
+  <FaBuilding className="stat-icon" />
           <span className="tile-value">{stats.tenants}</span>
           <span className="tile-label">Active Tenants</span>
           <span className="tile-change up">↑ 2 this month</span>
         </div>
-        <div className="stat-tile" data-icon="🏪">
+       <div className="stat-tile">
+  <FaStore className="stat-icon" />
           <span className="tile-value">{stats.stores}</span>
           <span className="tile-label">Total Stores</span>
           <span className="tile-change up">↑ 5 this month</span>
         </div>
-        <div className="stat-tile" data-icon="👥">
+        <div className="stat-tile">
+  <FaUsers className="stat-icon" />
           <span className="tile-value">{stats.admins}</span>
           <span className="tile-label">Tenant Admins</span>
           <span className="tile-change up">↑ 1 this week</span>
         </div>
-        <div className="stat-tile" data-icon="🔑">
+       <div className="stat-tile">
+  <FaKey className="stat-icon" />
           <span className="tile-value">{stats.roles}</span>
           <span className="tile-label">Roles Defined</span>
           <span className="tile-change up">Stable</span>
@@ -133,18 +166,40 @@ export default function DashboardPage() {
       <div className="activity-section">
         <h3 className="section-title">Recent Activity</h3>
         <div className="activity-list">
-          {[
-            { icon: "🏢", text: "New tenant \"Metro Mart\" onboarded", time: "2h ago", type: "create" },
-            { icon: "🏪", text: "Store #42 \"Downtown Branch\" went live", time: "5h ago", type: "create" },
-            { icon: "🔑", text: "Role \"Store Manager\" permissions updated", time: "1d ago", type: "update" },
-            { icon: "👤", text: "Admin Priya S. added to tenant TechMall", time: "1d ago", type: "create" },
-          ].map((item, i) => (
-            <div key={i} className="activity-item">
-              <div className="activity-icon">{item.icon}</div>
-              <div className="activity-text">{item.text}</div>
-              <div className="activity-time">{item.time}</div>
-            </div>
-          ))}
+      {recentAdmins.length > 0 ? (
+  recentAdmins.map((admin: any) => (
+    <div
+      key={admin.id}
+      className="activity-item"
+    >
+     <div className="activity-icon">
+  <FaUser />
+</div>
+
+      <div className="activity-text">
+        Admin {admin.name} created
+      </div>
+
+      <div className="activity-time">
+        {admin.status || "Active"}
+      </div>
+    </div>
+  ))
+) : (
+  <div className="activity-item">
+    <div className="activity-icon">
+  <FaInbox />
+</div>
+
+    <div className="activity-text">
+      No recent admin activity
+    </div>
+
+    <div className="activity-time">
+      --
+    </div>
+  </div>
+)}
         </div>
       </div>
     </Layout>
