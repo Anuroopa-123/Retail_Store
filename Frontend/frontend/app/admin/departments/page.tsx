@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import AdminLayout from "@/app/components/admin-layouts/AdminLayout";
 import { useAuth } from "@/src/context/AuthContext";
 import "./departments.css";
+import toast from "react-hot-toast";
 
 interface Department {
   id: number;
@@ -128,9 +129,9 @@ const createDepartment = async () => {
 
   if(response.ok){
 
-    alert(
-      "Department Created"
-    );
+   toast.success(
+  "Department Created Successfully"
+);
 
     setShowModal(false);
 
