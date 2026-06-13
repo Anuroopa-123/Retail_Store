@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useRouter } from "next/navigation";
 import "./login.css";
 import {
@@ -24,10 +24,8 @@ export default function LoginPage() {
   setShowPassword] =
     useState(false);
 
-  const [captcha, setCaptcha] = useState(
-    () => generateCaptcha()
-  );
-
+const [captcha, setCaptcha] =
+  useState("");
   const [userCaptcha, setUserCaptcha] =
     useState("");
 

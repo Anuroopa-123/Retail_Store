@@ -131,7 +131,10 @@ async def list_admins(
                 "id": user.id,
                 "name": user.name,
                 "email": user.email,
-                "status": user.status
+                "status": user.status,
+
+                "tenant_id": user.tenant_id,
+                "store_id": user.store_id
             })
 
     return admins
