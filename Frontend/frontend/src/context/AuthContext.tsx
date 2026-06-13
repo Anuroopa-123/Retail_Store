@@ -91,45 +91,61 @@ export function AuthProvider({
       }
   };
 
-  const refreshUser = async () => {
+const refreshUser = async () => {
 
-    const token =
-      localStorage.getItem(
-        "access_token"
+  const token =
+    localStorage.getItem(
+      "access_token"
+    );
+
+  if (!token) {
+
+    console.log(
+      "NO ACCESS TOKEN"
+    );
+
+    setLoading(false);
+
+    return;
+  }
+
+  try {
+
+    const data =
+      await apiFetch<User>(
+        "/api/v1/auth/me"
       );
 
-    if (!token) {
-      setLoading(false);
-      return;
-    }
+    console.log(
+      "ME RESPONSE",
+      data
+    );
 
-    try {
+    setUser(data);
 
-      const data =
-        await apiFetch<User>(
-          "/api/v1/auth/me"
-        );
+  } catch(error) {
 
-      setUser(data);
+    console.log(
+      "AUTH ERROR",
+      error
+    );
 
-    } catch {
+    localStorage.removeItem(
+      "access_token"
+    );
 
-      localStorage.removeItem(
-        "access_token"
-      );
+    localStorage.removeItem(
+      "refresh_token"
+    );
 
-      localStorage.removeItem(
-        "refresh_token"
-      );
+    setUser(null);
 
-      setUser(null);
+  } finally {
 
-    } finally {
+    setLoading(false);
 
-      setLoading(false);
-
-    }
-  };
+  }
+};
 
   useEffect(() => {
 

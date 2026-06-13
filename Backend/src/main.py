@@ -29,6 +29,9 @@ from src.presentation.api.admin.router import (
 from src.presentation.api.employee.router import (
     router as employee_router
 )
+from src.presentation.api.department.router import (
+    router as department_router
+)
 
 
 # ── lifespan ─────────────────────────────────────────────────────────────────
@@ -123,6 +126,10 @@ app.include_router(
 
 app.include_router(
     employee_router,
+    prefix="/api/v1"
+)
+app.include_router(
+    department_router,
     prefix="/api/v1"
 )
 

@@ -24,6 +24,11 @@ export default function AdminSidebar() {
       path: "/admin/dashboard"
     },
     {
+  name: "Departments",
+  icon: <FaUsers />,
+  path: "/admin/departments"
+},
+    {
       name: "Employees",
       icon: <FaUsers />,
       path: "/admin/employees"

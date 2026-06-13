@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
+from src.domain.entities import user
 from src.domain.entities.user import User
 from src.domain.entities.employee.employee_profile import EmployeeProfile
 
@@ -40,14 +41,25 @@ class EmployeeRepository:
         await self.db.flush()
 
         employee = EmployeeProfile(
-            user_id=user.id,
-            tenant_id=data.tenant_id,
-            employee_code=data.employee_code,
-            gender=data.gender,
-            phone=data.phone,
-            joining_date=data.joining_date,
-            department=data.department
-        )
+
+    user_id=user.id,
+
+    tenant_id=data.tenant_id,
+
+    store_id=data.store_id,
+
+    employee_code=data.employee_code,
+
+    gender=data.gender,
+
+    phone=data.phone,
+
+    joining_date=data.joining_date,
+
+    department=str(
+        data.department_id
+    )
+)
 
         self.db.add(employee)
 

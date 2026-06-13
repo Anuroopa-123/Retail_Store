@@ -166,3 +166,73 @@ tbody tr {
       );
   }
 }
+
+.modal-overlay {
+
+  position: fixed;
+
+  inset: 0;
+
+  background:
+    rgba(0,0,0,.65);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  z-index: 999;
+}
+
+.employee-modal {
+
+  width: 550px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #151932,
+      #1d2145
+    );
+
+  border-radius: 20px;
+
+  padding: 30px;
+}
+
+.employee-modal h2 {
+
+  color: white;
+
+  margin-bottom: 20px;
+}
+
+.employee-modal input,
+.employee-modal select {
+
+  width: 100%;
+
+  padding: 14px;
+
+  margin-bottom: 15px;
+
+  background: #0f1227;
+
+  color: white;
+
+  border: 1px solid rgba(255,255,255,.08);
+
+  border-radius: 10px;
+}
+
+.modal-actions {
+
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  margin-top: 20px;
+}
