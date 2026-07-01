@@ -1,11 +1,13 @@
 from fastapi import (
     APIRouter,
-    Depends
+    Depends,
+    HTTPException
 )
 
 from sqlalchemy.ext.asyncio import (
     AsyncSession
 )
+
 
 from src.infrastructure.database.postgresql import (
     get_session
@@ -38,19 +40,27 @@ async def list_employees(
 
     return await service.get_all()
 
-
 @router.post("/")
 async def create_employee(
     payload: EmployeeCreateRequest,
-    db: AsyncSession = Depends(
-        get_session
-    )
+    db: AsyncSession = Depends(get_session)
 ):
 
-    service = EmployeeService(
-        db
-    )
+    try:
 
-    return await service.create(
-        payload
-    )
+        service = EmployeeService(db)
+
+        return await service.create(payload)
+
+    except Exception as e:
+
+        print("=================================")
+        print("EMPLOYEE CREATE ERROR")
+        print(type(e))
+        print(e)
+        print("=================================")
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )

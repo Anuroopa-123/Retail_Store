@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select,func
+from sqlalchemy.sql.functions import count
 
 from src.domain.entities import user
 from src.domain.entities.user import User
@@ -28,6 +29,7 @@ class EmployeeRepository:
 
         user = User(
             tenant_id=data.tenant_id,
+            store_id=data.store_id,
             name=data.name,
             email=data.email,
             password_hash=hash_password(
@@ -39,6 +41,11 @@ class EmployeeRepository:
         self.db.add(user)
 
         await self.db.flush()
+        count = await self.db.scalar(
+            select(func.count(EmployeeProfile.id))
+        )
+
+        employee_code = f"EMP{count + 1:03d}"
 
         employee = EmployeeProfile(
 
@@ -48,7 +55,7 @@ class EmployeeRepository:
 
     store_id=data.store_id,
 
-    employee_code=data.employee_code,
+    employee_code=employee_code,
 
     gender=data.gender,
 

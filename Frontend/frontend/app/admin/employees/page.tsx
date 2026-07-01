@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import AdminLayout from "@/app/components/admin-layouts/AdminLayout";
 import "./employees.css";
 import { useAuth } from "@/src/context/AuthContext";
+import { toast } from "react-hot-toast/headless";
 
 interface Department {
   id: number;
@@ -21,8 +22,6 @@ export default function EmployeesPage() {
 
  const [formData, setFormData] =
 useState({
-
-  employee_code: "",
 
   name: "",
 
@@ -82,7 +81,7 @@ async () => {
 
         const response =
           await fetch(
-            "http://127.0.0.1:8000/api/v1/employees",
+            "http://127.0.0.1:8000/api/v1/employees/",
             {
               method: "POST",
 
@@ -111,9 +110,18 @@ async () => {
 
         if(response.ok){
 
-          alert(
-            "Employee Created Successfully"
-          );
+        const result = await response.json();
+
+console.log(result);
+
+if(response.ok){
+
+    toast.success("Employee Created Successfully");
+
+}else{
+
+    toast.error(result.detail);
+}
 
           setShowModal(false);
 
@@ -165,7 +173,7 @@ async () => {
                 Add Employee
               </h2>
 
-              <input
+              {/* <input
                 placeholder="Employee Code"
                 value={
                   formData.employee_code
@@ -177,7 +185,7 @@ async () => {
                       e.target.value
                   })
                 }
-              />
+              /> */}
 
               <input
                 placeholder="Employee Name"

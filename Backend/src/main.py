@@ -32,6 +32,9 @@ from src.presentation.api.employee.router import (
 from src.presentation.api.department.router import (
     router as department_router
 )
+from src.presentation.api.admin.profile_router import (
+    router as admin_profile_router
+)
 
 
 # ── lifespan ─────────────────────────────────────────────────────────────────
@@ -132,7 +135,13 @@ app.include_router(
     department_router,
     prefix="/api/v1"
 )
+app.include_router(
 
+    admin_profile_router,
+
+    prefix="/api/v1"
+
+)
 # ── health ────────────────────────────────────────────────────────────────────
 
 @app.get("/health", tags=["Health"])

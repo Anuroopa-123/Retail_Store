@@ -1,10 +1,15 @@
 "use client";
 
 import { useAuth } from "@/src/context/AuthContext";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function AdminHeader() {
 
-  const { user } = useAuth();
+  const { user ,logout} = useAuth();
+  const router=useRouter();
+
+const [open,setOpen]=useState(false);
 
   return (
 
@@ -17,9 +22,41 @@ export default function AdminHeader() {
         </h2>
       </div>
 
-      <div className="admin-user">
-        {user?.email}
-      </div>
+     <div className="admin-user">
+
+<div
+onClick={()=>setOpen(!open)}
+>
+
+{user?.email} ▼
+
+</div>
+
+{open && (
+
+<div className="profile-dropdown">
+
+<button
+onClick={()=>router.push("/admin/admin-profile")}
+>
+
+My Profile
+
+</button>
+
+<button
+onClick={logout}
+>
+
+Logout
+
+</button>
+
+</div>
+
+)}
+
+</div>
 
     </header>
 

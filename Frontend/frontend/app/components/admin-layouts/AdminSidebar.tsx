@@ -57,7 +57,12 @@ export default function AdminSidebar() {
       name: "Reports",
       icon: <FaChartBar />,
       path: "/admin/reports"
-    }
+    },
+    {
+name:"Profile",
+icon:<FaUserFriends/>,
+path:"/admin/admin-profile"
+}
   ];
 
   return (
