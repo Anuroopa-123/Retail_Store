@@ -3,6 +3,7 @@
 import { useAuth } from "@/src/context/AuthContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { FaUserCircle, FaSignOutAlt, FaChevronDown } from "react-icons/fa";
 import './AdminHeader.css';
 
 export default function AdminHeader() {
@@ -23,39 +24,45 @@ const [open,setOpen]=useState(false);
         </h2>
       </div>
 
-     <div className="admin-user">
+  <div className="admin-user">
 
-<div
-onClick={()=>setOpen(!open)}
->
+  <div
+    className="user-info"
+    onClick={() => setOpen(!open)}
+  >
+    <span>{user?.email}</span>
 
-{user?.email} ▼
+    <FaChevronDown
+      className={`arrow ${open ? "rotate" : ""}`}
+    />
+  </div>
 
-</div>
+  {open && (
 
-{open && (
+    <div className="profile-dropdown">
 
-<div className="profile-dropdown">
+      <button
+        type="button"
+        onClick={() =>
+          router.push("/admin/admin-profile")
+        }
+      >
+        <FaUserCircle className="dropdown-icon" />
+        My Profile
+      </button>
 
-<button
-onClick={()=>router.push("/admin/admin-profile")}
->
+      <button
+        type="button"
+        className="logout-btn"
+        onClick={logout}
+      >
+        <FaSignOutAlt className="dropdown-icon" />
+        Logout
+      </button>
 
-My Profile
+    </div>
 
-</button>
-
-<button
-onClick={logout}
->
-
-Logout
-
-</button>
-
-</div>
-
-)}
+  )}
 
 </div>
 
