@@ -36,9 +36,11 @@ from src.presentation.api.admin.profile_router import (
     router as admin_profile_router
 )
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 UPLOAD_DIR = BASE_DIR / "uploads"
+
+print("UPLOAD_DIR =", UPLOAD_DIR)
 # ── lifespan ─────────────────────────────────────────────────────────────────
 
 @asynccontextmanager
