@@ -27,18 +27,26 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("/{tenant_id}/{store_id}")
 async def list_employees(
-    db: AsyncSession = Depends(
-        get_session
-    )
+
+    tenant_id: int,
+
+    store_id: int,
+
+    db: AsyncSession = Depends(get_session)
+
 ):
 
-    service = EmployeeService(
-        db
-    )
+    service = EmployeeService(db)
 
-    return await service.get_all()
+    return await service.get_all(
+
+        tenant_id,
+
+        store_id
+
+    )
 
 @router.post("/")
 async def create_employee(

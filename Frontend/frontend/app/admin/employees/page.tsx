@@ -19,6 +19,8 @@ export default function EmployeesPage() {
 
   const [departments, setDepartments] =
     useState<Department[]>([]);
+  const [employees, setEmployees] =
+useState<any[]>([]);
 
  const [formData, setFormData] =
 useState({
@@ -38,13 +40,17 @@ useState({
   joining_date: ""
 });
 
- useEffect(() => {
+useEffect(() => {
 
-  if(user){
-    getDepartments();
-  }
+    if(user){
 
-}, [user]);
+        getDepartments();
+
+        getEmployees();
+
+    }
+
+},[user]);
 
 const getDepartments =
 async () => {
@@ -72,6 +78,33 @@ async () => {
     console.log(error);
 
   }
+};
+const getEmployees = async () => {
+
+    if(!user){
+        return;
+    }
+
+    try{
+
+        const response = await fetch(
+
+`http://127.0.0.1:8000/api/v1/employees/${user.tenant_id}/${user.store_id}`
+
+        );
+
+        const data = await response.json();
+
+        setEmployees(data);
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+    }
+
 };
 
   const createEmployee =
@@ -124,6 +157,7 @@ if(response.ok){
 }
 
           setShowModal(false);
+          getEmployees();
 
         }
 
@@ -163,6 +197,71 @@ if(response.ok){
           placeholder="Search Employee..."
         />
 
+<table className="employee-table">
+
+    <thead>
+
+        <tr>
+
+            <th>Employee Code</th>
+
+            <th>Name</th>
+
+            <th>Email</th>
+
+            <th>Phone</th>
+
+            <th>Department</th>
+
+            <th>Gender</th>
+
+            <th>Joining Date</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {employees.length === 0 ? (
+
+            <tr>
+
+                <td colSpan={7}>
+                    No Employees Found
+                </td>
+
+            </tr>
+
+        ) : (
+
+            employees.map((emp:any)=>(
+
+                <tr key={emp.id}>
+
+                    <td>{emp.employee_code}</td>
+
+                    <td>{emp.name}</td>
+
+                    <td>{emp.email}</td>
+
+                    <td>{emp.phone}</td>
+
+                    <td>{emp.department}</td>
+
+                    <td>{emp.gender}</td>
+
+                    <td>{emp.joining_date}</td>
+
+                </tr>
+
+            ))
+
+        )}
+
+    </tbody>
+
+</table>
         {showModal && (
 
           <div className="modal-overlay">

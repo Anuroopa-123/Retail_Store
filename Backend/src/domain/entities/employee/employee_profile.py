@@ -43,6 +43,7 @@ class EmployeeProfile(BaseModel):
     payrolls: Mapped[list["EmployeePayroll"]] = relationship(
         "EmployeePayroll", back_populates="employee"
     )
+    
 
     def __repr__(self) -> str:
         return f"<EmployeeProfile code={self.employee_code}>"
