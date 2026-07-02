@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from slowapi.middleware import SlowAPIMiddleware
 from src.infrastructure.security.rate_limit import limiter
-
+from pathlib import Path
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 from src.infrastructure.security.middleware import SecurityHeadersMiddleware
 
@@ -16,7 +16,7 @@ from src.application.exception_handler import DomainError
 from src.presentation.api.auth.router import router as auth_router
 from src.presentation.api.roles.router import router as roles_router
 from src.presentation.api.user.router import router as user_router
-
+from fastapi.staticfiles import StaticFiles
 from src.presentation.api.tenant.router import (
     router as tenant_router
 )
@@ -36,7 +36,9 @@ from src.presentation.api.admin.profile_router import (
     router as admin_profile_router
 )
 
+BASE_DIR = Path(__file__).resolve().parent
 
+UPLOAD_DIR = BASE_DIR / "uploads"
 # ── lifespan ─────────────────────────────────────────────────────────────────
 
 @asynccontextmanager
@@ -141,6 +143,11 @@ app.include_router(
 
     prefix="/api/v1"
 
+)
+app.mount(
+    "/uploads",
+    StaticFiles(directory=str(UPLOAD_DIR)),
+    name="uploads"
 )
 # ── health ────────────────────────────────────────────────────────────────────
 

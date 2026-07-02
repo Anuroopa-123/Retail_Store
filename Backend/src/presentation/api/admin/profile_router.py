@@ -6,7 +6,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.infrastructure.database.postgresql import (
     get_session
 )
+import os
+import uuid
 
+from fastapi import UploadFile
+from fastapi import File
 from src.application.services.admin_profile_service import (
     AdminProfileService
 )
@@ -73,3 +77,54 @@ async def update_profile(
         body
 
     )
+    
+@router.post("/upload-photo")
+async def upload_photo(
+
+    file: UploadFile = File(...),
+
+    current_user: User = Depends(get_current_user),
+
+    db: AsyncSession = Depends(get_session)
+
+):
+
+    folder = "uploads/admin_images"
+
+    os.makedirs(folder, exist_ok=True)
+
+    extension = file.filename.split(".")[-1]
+
+    filename = f"admin_{current_user.id}_{uuid.uuid4().hex}.{extension}"
+
+    filepath = os.path.join(
+        folder,
+        filename
+    )
+
+    with open(filepath, "wb") as buffer:
+
+        buffer.write(
+            await file.read()
+        )
+
+    photo_url = f"/uploads/admin_images/{filename}"
+
+    service = AdminProfileService(db)
+
+    await service.update_photo(
+
+        current_user,
+
+        photo_url
+
+    )
+
+    return {
+
+        "photo": photo_url
+
+    }
+    
+    
+    

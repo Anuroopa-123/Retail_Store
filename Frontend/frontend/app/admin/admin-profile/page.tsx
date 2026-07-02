@@ -85,6 +85,86 @@ export default function ProfilePage() {
   }
 
 };
+const uploadPhoto = async (
+    e: React.ChangeEvent<HTMLInputElement>
+) => {
+
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    const token =
+        localStorage.getItem(
+            "access_token"
+        );
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "file",
+        file
+    );
+
+    try {
+
+        const response =
+            await fetch(
+
+                "http://127.0.0.1:8000/api/v1/admin/profile/upload-photo",
+
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        Authorization:
+                            `Bearer ${token}`
+
+                    },
+
+                    body: formData
+
+                }
+
+            );
+
+        const result =
+            await response.json();
+            console.log("Upload Response:", result);
+
+        if (response.ok) {
+
+           setProfile((prev) => ({
+
+    ...prev,
+
+    photo: `${result.photo}?t=${Date.now()}`
+
+}));
+
+            toast.success(
+                "Photo Uploaded Successfully"
+            );
+
+        } else {
+
+            toast.error(
+                result.detail
+            );
+
+        }
+
+    } catch {
+
+        toast.error(
+            "Upload Failed"
+        );
+
+    }
+
+};
 
   const updateProfile = async () => {
 
@@ -125,6 +205,13 @@ export default function ProfilePage() {
   }
 
 };
+const imageUrl =
+    profile.photo
+        ? `http://127.0.0.1:8000${profile.photo}`
+        : "/images/profile.png";
+
+console.log(imageUrl);
+
 
   return(
 
@@ -140,21 +227,34 @@ export default function ProfilePage() {
 
           </h1>
 
-          <div className="profile-photo">
+       <div className="profile-photo">
 
-            <img
+    <label htmlFor="photo-upload">
 
-              src={
-                profile.photo ||
+  <img
+    src={imageUrl}
+    alt="Profile"
+    onError={() => {
+        console.log("Image failed to load");
+        console.log(imageUrl);
+    }}
+/>
 
-                "/images/profile.png"
-              }
+        <div className="photo-overlay">
+            Change Photo
+        </div>
 
-              alt="Profile"
+    </label>
 
-            />
+    <input
+        id="photo-upload"
+        type="file"
+        accept="image/*"
+        hidden
+        onChange={uploadPhoto}
+    />
 
-          </div>
+</div>
 
           <div className="profile-grid">
 

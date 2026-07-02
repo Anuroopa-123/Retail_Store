@@ -25,6 +25,8 @@ class AdminProfileRepository:
         )
 
         return result.scalar_one_or_none()
+    
+    
 
     async def create_or_update(
         self,
@@ -62,6 +64,38 @@ class AdminProfileRepository:
         profile.pincode = data.pincode
 
         profile.photo = data.photo
+
+        await self.db.commit()
+
+        await self.db.refresh(profile)
+
+        return profile
+    
+    async def update_photo(
+
+    self,
+
+    user,
+
+    photo
+
+    ):
+
+        profile = await self.get_profile(
+        user.id
+        )
+
+        if not profile:
+
+            profile = AdminProfile(
+
+                user_id=user.id
+
+            )
+
+            self.db.add(profile)
+
+        profile.photo = photo
 
         await self.db.commit()
 

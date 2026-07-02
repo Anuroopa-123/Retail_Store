@@ -28,3 +28,22 @@ class AdminProfileService:
             user,
             data
         )
+    async def update_photo(
+
+    self,
+
+    user,
+
+    photo
+
+    ):
+
+        return await self.repo.update_photo(
+
+            user,
+
+            photo
+
+        )
+
+   
