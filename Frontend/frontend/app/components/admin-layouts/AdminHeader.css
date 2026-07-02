@@ -1,0 +1,100 @@
+/* Header Right Side */
+.admin-user{
+    position:relative;
+    display:flex;
+    align-items:center;
+}
+
+/* User Email */
+.user-info{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 16px;
+    border-radius:10px;
+    background:#f6f6f6;
+    cursor:pointer;
+    transition:.3s;
+    user-select:none;
+    font-weight:500;
+}
+
+.user-info:hover{
+    background:#ececec;
+}
+
+/* Arrow Animation */
+.arrow{
+    font-size:12px;
+    transition:.3s;
+}
+
+.arrow.rotate{
+    transform:rotate(180deg);
+}
+
+/* Dropdown */
+.profile-dropdown{
+    position:absolute;
+    top:52px;
+    right:0;
+    width:200px;
+    background:#fff;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 12px 30px rgba(0,0,0,.15);
+    animation:dropdownAnimation .25s ease;
+    z-index:1000;
+}
+
+/* Buttons */
+.profile-dropdown button{
+    width:100%;
+    padding:14px 18px;
+    border:none;
+    background:#fff;
+    text-align:left;
+    cursor:pointer;
+    font-size:15px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    transition:.25s;
+}
+
+/* My Profile Hover */
+.profile-dropdown button:hover{
+    background:#f4e9f8;
+    color:#8e1697;
+}
+
+/* Logout Button */
+.logout-btn{
+    color:#e53935;
+}
+
+/* Logout Hover */
+.logout-btn:hover{
+    background:#ffe5e5 !important;
+    color:#c62828 !important;
+}
+
+/* Divider */
+.profile-dropdown button:first-child{
+    border-bottom:1px solid #ececec;
+}
+
+/* Animation */
+@keyframes dropdownAnimation{
+
+    from{
+        opacity:0;
+        transform:translateY(-10px) scale(.95);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+
+}

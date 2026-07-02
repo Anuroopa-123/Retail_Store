@@ -3,6 +3,7 @@
 import { useAuth } from "@/src/context/AuthContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import './AdminHeader.css';
 
 export default function AdminHeader() {
 
