@@ -15,8 +15,6 @@ class EmployeeCreateRequest(
 
     password: str
 
-    employee_code: str
-
     gender: str | None = None
 
     phone: str | None = None

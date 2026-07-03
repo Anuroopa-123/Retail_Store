@@ -12,6 +12,7 @@ from src.domain.entities.auth.personal_access_token import PersonalAccessToken
 from src.domain.entities.auth.password_reset_token import PasswordResetToken
 from src.domain.entities.auth.email_verification_token import EmailVerificationToken
 from src.domain.entities.operational.notification import Notification
+from sqlalchemy.orm import relationship
 
 
 class User(BaseModel):

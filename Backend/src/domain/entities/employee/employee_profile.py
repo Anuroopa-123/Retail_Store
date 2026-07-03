@@ -20,6 +20,11 @@ class EmployeeProfile(BaseModel):
         Integer, ForeignKey("tenants.id", ondelete="CASCADE"),
         nullable=False, index=True,
     )
+    store_id: Mapped[int] = mapped_column(
+    Integer,
+    ForeignKey("stores.id"),
+    nullable=False
+)
     employee_code: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     gender: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
     dob: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
@@ -38,6 +43,7 @@ class EmployeeProfile(BaseModel):
     payrolls: Mapped[list["EmployeePayroll"]] = relationship(
         "EmployeePayroll", back_populates="employee"
     )
+    
 
     def __repr__(self) -> str:
         return f"<EmployeeProfile code={self.employee_code}>"
