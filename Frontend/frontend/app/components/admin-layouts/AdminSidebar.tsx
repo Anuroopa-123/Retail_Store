@@ -38,6 +38,11 @@ export default function AdminSidebar() {
       icon: <FaClipboardCheck />,
       path: "/admin/attendance"
     },
+      {
+      name: "Inventory",
+      icon: <FaClipboardCheck />,
+      path: "/admin/inventory"
+    },
     {
       name: "Payroll",
       icon: <FaMoneyCheckAlt />,
@@ -46,7 +51,17 @@ export default function AdminSidebar() {
     {
       name: "Products",
       icon: <FaBoxOpen />,
-      path: "/admin/products"
+      path: "/admin/product categories"
+    },
+      {
+      name: "Brands",
+      icon: <FaUserFriends />,
+      path: "/admin/brands"
+    },
+     {
+      name: "Products",
+      icon: <FaBoxOpen />,
+      path: "/admin/product"
     },
     {
       name: "Customers",
@@ -54,9 +69,9 @@ export default function AdminSidebar() {
       path: "/admin/customers"
     },
     {
-      name: "Reports",
+      name: "Billing",
       icon: <FaChartBar />,
-      path: "/admin/reports"
+      path: "/admin/billing"
     },
     {
 name:"Profile",
