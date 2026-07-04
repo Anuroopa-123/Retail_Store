@@ -39,6 +39,9 @@ from src.presentation.api.admin.profile_router import (
 from src.presentation.api.product_category.router import (
     router as product_category_router
 )
+from src.presentation.api.brand.router import (
+    router as brand_router
+)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 UPLOAD_DIR = BASE_DIR / "uploads"
@@ -152,6 +155,13 @@ app.include_router(
 app.include_router(
     product_category_router,
     prefix="/api/v1"
+)
+app.include_router(
+
+    brand_router,
+
+    prefix="/api/v1"
+
 )
 app.mount(
     "/uploads",
