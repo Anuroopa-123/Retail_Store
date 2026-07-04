@@ -49,9 +49,9 @@ export default function AdminSidebar() {
       path: "/admin/payroll"
     },
     {
-      name: "Products",
+      name: "Products-Categories",
       icon: <FaBoxOpen />,
-      path: "/admin/product categories"
+      path: "/admin/product-categories"
     },
       {
       name: "Brands",
