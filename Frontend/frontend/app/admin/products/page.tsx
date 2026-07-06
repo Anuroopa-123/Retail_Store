@@ -3,9 +3,14 @@
 import { useEffect, useState } from "react";
 import AdminLayout from "@/app/components/admin-layouts/AdminLayout";
 import { useAuth } from "@/src/context/AuthContext";
+import { apiFetch } from "@/src/lib/api/client";
 import { toast } from "react-hot-toast";
 
 import "./products.css";
+
+// ==============================
+// Interfaces
+// ==============================
 
 interface Category {
 
@@ -53,51 +58,55 @@ interface Product {
 
 }
 
+// ==============================
+// Component
+// ==============================
+
 export default function ProductsPage() {
 
     const { user } = useAuth();
 
-    // -----------------------------
+    // ==============================
     // Modal
-    // -----------------------------
+    // ==============================
 
     const [showModal, setShowModal] =
         useState(false);
 
-    // -----------------------------
+    // ==============================
     // Loading
-    // -----------------------------
+    // ==============================
 
     const [loading, setLoading] =
         useState(false);
 
-    // -----------------------------
+    // ==============================
     // Search
-    // -----------------------------
+    // ==============================
 
     const [search, setSearch] =
         useState("");
 
-    // -----------------------------
+    // ==============================
     // Edit
-    // -----------------------------
+    // ==============================
 
     const [editId, setEditId] =
         useState<number | null>(null);
 
-    // -----------------------------
-    // Image Preview
-    // -----------------------------
-
-    const [imagePreview, setImagePreview] =
-        useState("");
+    // ==============================
+    // Image Upload
+    // ==============================
 
     const [selectedImage, setSelectedImage] =
         useState<File | null>(null);
 
-    // -----------------------------
+    const [imagePreview, setImagePreview] =
+        useState("");
+
+    // ==============================
     // Dropdown Data
-    // -----------------------------
+    // ==============================
 
     const [categories, setCategories] =
         useState<Category[]>([]);
@@ -105,16 +114,16 @@ export default function ProductsPage() {
     const [brands, setBrands] =
         useState<Brand[]>([]);
 
-    // -----------------------------
+    // ==============================
     // Product List
-    // -----------------------------
+    // ==============================
 
     const [products, setProducts] =
         useState<Product[]>([]);
 
-    // -----------------------------
+    // ==============================
     // Form Data
-    // -----------------------------
+    // ==============================
 
     const [formData, setFormData] =
         useState({
@@ -143,9 +152,9 @@ export default function ProductsPage() {
 
         });
 
-    // -----------------------------
+    // ==============================
     // Load Initial Data
-    // -----------------------------
+    // ==============================
 
     useEffect(() => {
 
@@ -161,9 +170,9 @@ export default function ProductsPage() {
 
     }, [user]);
 
-    // ======================================
+    // ==============================
     // Get Categories
-    // ======================================
+    // ==============================
 
     const getCategories = async () => {
 
@@ -171,13 +180,11 @@ export default function ProductsPage() {
 
         try {
 
-            const response = await fetch(
+            const data = await apiFetch<Category[]>(
 
-                `http://127.0.0.1:8000/api/v1/product-categories/${user.tenant_id}/${user.store_id}`
+                `/api/v1/product-categories/${user.tenant_id}/${user.store_id}`
 
             );
-
-            const data = await response.json();
 
             setCategories(data);
 
@@ -187,13 +194,15 @@ export default function ProductsPage() {
 
             console.log(error);
 
+            toast.error("Failed to load categories");
+
         }
 
     };
 
-    // ======================================
+    // ==============================
     // Get Brands
-    // ======================================
+    // ==============================
 
     const getBrands = async () => {
 
@@ -201,13 +210,11 @@ export default function ProductsPage() {
 
         try {
 
-            const response = await fetch(
+            const data = await apiFetch<Brand[]>(
 
-                `http://127.0.0.1:8000/api/v1/brands/${user.tenant_id}/${user.store_id}`
+                `/api/v1/brands/${user.tenant_id}/${user.store_id}`
 
             );
-
-            const data = await response.json();
 
             setBrands(data);
 
@@ -217,13 +224,15 @@ export default function ProductsPage() {
 
             console.log(error);
 
+            toast.error("Failed to load brands");
+
         }
 
     };
 
-    // ======================================
+    // ==============================
     // Get Products
-    // ======================================
+    // ==============================
 
     const getProducts = async () => {
 
@@ -231,13 +240,11 @@ export default function ProductsPage() {
 
         try {
 
-            const response = await fetch(
+            const data = await apiFetch<Product[]>(
 
-                `http://127.0.0.1:8000/api/v1/products/${user.tenant_id}/${user.store_id}`
+                `/api/v1/products/${user.tenant_id}/${user.store_id}`
 
             );
-
-            const data = await response.json();
 
             setProducts(data);
 
@@ -247,11 +254,13 @@ export default function ProductsPage() {
 
             console.log(error);
 
+            toast.error("Failed to load products");
+
         }
 
     };
 
- // ======================================
+  // ======================================
 // Handle Image Selection
 // ======================================
 
@@ -275,7 +284,6 @@ const handleImageChange = (
 
 };
 
-
 // ======================================
 // Create Product
 // ======================================
@@ -288,114 +296,178 @@ const createProduct = async () => {
 
     try {
 
-      let imageUrl = "";
+        let imageUrl = "";
 
-if (selectedImage) {
+        // ---------------------------------
+        // Upload Product Image
+        // ---------------------------------
 
-    const uploadData = new FormData();
+        if (selectedImage) {
 
-    uploadData.append(
+            const uploadData = new FormData();
 
-        "file",
+            uploadData.append(
 
-        selectedImage
+                "file",
 
-    );
+                selectedImage
 
-    const uploadResponse = await fetch(
+            );
 
-        "http://127.0.0.1:8000/api/v1/product-upload/",
+            const token =
 
-        {
+                localStorage.getItem(
 
-            method: "POST",
+                    "access_token"
 
-            body: uploadData
+                );
+
+            const uploadResponse = await fetch(
+
+                `${process.env.NEXT_PUBLIC_API_URL}/api/v1/product-upload/`,
+
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        ...(token
+                            ? {
+                                Authorization:
+                                    `Bearer ${token}`
+                            }
+                            : {})
+
+                    },
+
+                    body: uploadData
+
+                }
+
+            );
+
+            if (!uploadResponse.ok) {
+
+                throw new Error(
+
+                    "Image Upload Failed"
+
+                );
+
+            }
+
+            const uploadResult =
+
+                await uploadResponse.json();
+
+            imageUrl =
+
+                uploadResult.image_url;
 
         }
 
-    );
+        // ---------------------------------
+        // Save Product
+        // ---------------------------------
 
-    const uploadResult = await uploadResponse.json();
+        await apiFetch(
 
-    imageUrl = uploadResult.image_url;
-}
-
-        const response = await fetch(
-
-            "http://127.0.0.1:8000/api/v1/products/",
+            "/api/v1/products/",
 
             {
 
                 method: "POST",
 
-                headers: {
-
-                    "Content-Type": "application/json"
-
-                },
-
                 body: JSON.stringify({
 
-                    tenant_id: user.tenant_id,
+                    tenant_id:
 
-                    store_id: user.store_id,
+                        user.tenant_id,
 
-                    category_id: Number(
+                    store_id:
 
-                        formData.category_id
+                        user.store_id,
 
-                    ),
+                    category_id:
 
-                    brand_id: Number(
+                        Number(
 
-                        formData.brand_id
+                            formData.category_id
 
-                    ),
+                        ),
 
-                    product_name: formData.product_name,
+                    brand_id:
 
-                    purchase_price: Number(
+                        Number(
 
-                        formData.purchase_price
+                            formData.brand_id
 
-                    ),
+                        ),
 
-                    selling_price: Number(
+                    product_name:
 
-                        formData.selling_price
+                        formData.product_name,
 
-                    ),
+                    purchase_price:
 
-                    tax: Number(
+                        Number(
 
-                        formData.tax
+                            formData.purchase_price
 
-                    ),
+                        ),
 
-                    stock: Number(
+                    selling_price:
 
-                        formData.stock
+                        Number(
 
-                    ),
+                            formData.selling_price
 
-                    minimum_stock: Number(
+                        ),
 
-                        formData.minimum_stock
+                    tax:
 
-                    ),
+                        Number(
 
-                    unit: formData.unit,
+                            formData.tax
+
+                        ),
+
+                    stock:
+
+                        Number(
+
+                            formData.stock
+
+                        ),
+
+                    minimum_stock:
+
+                        Number(
+
+                            formData.minimum_stock
+
+                        ),
+
+                    unit:
+
+                        formData.unit,
 
                     description:
 
                         formData.description,
 
-                    image_url: imageUrl,
+                    image_url:
 
-                    status: formData.status,
+                        imageUrl,
 
-                    created_by: user.id
+                    status:
+
+                        formData.status,
+
+                    created_by:
+
+                        user.id
 
                 })
 
@@ -403,101 +475,61 @@ if (selectedImage) {
 
         );
 
-        const result = await response.json();
+        toast.success(
 
-        if (response.ok) {
+            "Product Added Successfully"
 
-            toast.success(
+        );
 
-                "Product Added Successfully"
+        // ---------------------------------
+        // Reset Form
+        // ---------------------------------
 
-            );
+        setFormData({
 
-            // -----------------------------
-            // Reset Form
-            // -----------------------------
+            category_id: "",
 
-            setFormData({
+            brand_id: "",
 
-                category_id: "",
+            product_name: "",
 
-                brand_id: "",
+            purchase_price: "",
 
-                product_name: "",
+            selling_price: "",
 
-                purchase_price: "",
+            tax: "",
 
-                selling_price: "",
+            stock: "",
 
-                tax: "",
+            minimum_stock: "",
 
-                stock: "",
+            unit: "",
 
-                minimum_stock: "",
+            description: "",
 
-                unit: "",
+            status: "Active"
 
-                description: "",
+        });
 
-                status: "Active"
+        setSelectedImage(null);
 
-            });
+        setImagePreview("");
 
-            setSelectedImage(null);
+        setEditId(null);
 
-            setImagePreview("");
+        setShowModal(false);
 
-            setShowModal(false);
-
-            getProducts();
-
-        }
-
-        else {
-
-            if (
-
-                Array.isArray(result.detail)
-
-            ) {
-
-                toast.error(
-
-                    result.detail
-
-                        .map(
-
-                            (err: any) => err.msg
-
-                        )
-
-                        .join(", ")
-
-                );
-
-            }
-
-            else {
-
-                toast.error(
-
-                    result.detail ||
-
-                    "Failed to create product"
-
-                );
-
-            }
-
-        }
+        await getProducts();
 
     }
 
-    catch (error) {
+    catch (error: any) {
 
         console.log(error);
 
         toast.error(
+
+            error.message ||
 
             "Something went wrong"
 
@@ -512,7 +544,8 @@ if (selectedImage) {
     }
 
 };
- return (
+
+  return (
 
     <AdminLayout>
 
@@ -520,7 +553,7 @@ if (selectedImage) {
 
             {/* ===========================
                 Header
-            ============================ */}
+            =========================== */}
 
             <div className="product-header">
 
@@ -551,8 +584,8 @@ if (selectedImage) {
             </div>
 
             {/* ===========================
-                Search
-            ============================ */}
+                Search Box
+            =========================== */}
 
             <input
 
@@ -578,7 +611,7 @@ if (selectedImage) {
 
             {/* ===========================
                 Product Table
-            ============================ */}
+            =========================== */}
 
             <table className="product-table">
 
@@ -598,9 +631,9 @@ if (selectedImage) {
 
                         <th>Barcode</th>
 
-                        <th>Purchase</th>
+                        <th>Purchase Price</th>
 
-                        <th>Selling</th>
+                        <th>Selling Price</th>
 
                         <th>GST</th>
 
@@ -642,6 +675,8 @@ if (selectedImage) {
 
                             >
 
+                                {/* Image */}
+
                                 <td>
 
                                     {
@@ -652,13 +687,9 @@ if (selectedImage) {
 
                                             <img
 
-                                                src={`http://127.0.0.1:8000/uploads/${product.image_url}`}
+                                                src={`${process.env.NEXT_PUBLIC_API_URL}${product.image_url}`}
 
-                                                alt={
-
-                                                    product.product_name
-
-                                                }
+                                                alt={product.product_name}
 
                                                 className="table-image"
 
@@ -682,11 +713,15 @@ if (selectedImage) {
 
                                 </td>
 
+                                {/* Product */}
+
                                 <td>
 
                                     {product.product_name}
 
                                 </td>
+
+                                {/* Category */}
 
                                 <td>
 
@@ -694,11 +729,15 @@ if (selectedImage) {
 
                                 </td>
 
+                                {/* Brand */}
+
                                 <td>
 
                                     {product.brand_name}
 
                                 </td>
+
+                                {/* SKU */}
 
                                 <td>
 
@@ -706,11 +745,15 @@ if (selectedImage) {
 
                                 </td>
 
+                                {/* Barcode */}
+
                                 <td>
 
                                     {product.barcode}
 
                                 </td>
+
+                                {/* Purchase */}
 
                                 <td>
 
@@ -728,6 +771,8 @@ if (selectedImage) {
 
                                 </td>
 
+                                {/* Selling */}
+
                                 <td>
 
                                     ₹
@@ -744,25 +789,23 @@ if (selectedImage) {
 
                                 </td>
 
-                                <td>
-
-                                    {
-
-                                        product.tax
-
-                                    }%
-
-                                </td>
+                                {/* GST */}
 
                                 <td>
 
-                                    {
-
-                                        product.stock
-
-                                    }
+                                    {product.tax}%
 
                                 </td>
+
+                                {/* Stock */}
+
+                                <td>
+
+                                    {product.stock}
+
+                                </td>
+
+                                {/* Status */}
 
                                 <td>
 
@@ -784,15 +827,13 @@ if (selectedImage) {
 
                                     >
 
-                                        {
-
-                                            product.status
-
-                                        }
+                                        {product.status}
 
                                     </span>
 
                                 </td>
+
+                                {/* Actions */}
 
                                 <td>
 
@@ -828,7 +869,9 @@ if (selectedImage) {
 
                                         onClick={() => {
 
-                                            // Delete comes later
+                                            // Delete API
+
+                                            // will be added later
 
                                         }}
 
@@ -846,436 +889,482 @@ if (selectedImage) {
 
                     }
 
+                    {
+
+                        products.length === 0 && (
+
+                            <tr>
+
+                                <td
+
+                                    colSpan={12}
+
+                                    style={{
+
+                                        textAlign: "center",
+
+                                        padding: "30px"
+
+                                    }}
+
+                                >
+
+                                    No Products Found
+
+                                </td>
+
+                            </tr>
+
+                        )
+
+                    }
+
                 </tbody>
 
             </table>
-{/* =========================================
-    Add / Edit Product Modal
-========================================= */}
 
-{showModal && (
+          {
+    showModal && (
 
-<div className="modal-overlay">
+        <div className="modal-overlay">
 
-    <div className="product-modal">
+            <div className="product-modal">
 
-        <h2>
+                <h2>
 
-            {editId ? "Edit Product" : "Add Product"}
+                    {
 
-        </h2>
+                        editId
 
-        {/* Category */}
+                            ?
 
-        <select
+                            "Edit Product"
 
-            value={formData.category_id}
+                            :
 
-            onChange={(e)=>
+                            "Add Product"
 
-                setFormData({
+                    }
 
-                    ...formData,
+                </h2>
 
-                    category_id: e.target.value
+                {/* Category */}
 
-                })
+                <select
 
-            }
+                    value={formData.category_id}
 
-        >
+                    onChange={(e) =>
 
-            <option value="">
+                        setFormData({
 
-                Select Category
+                            ...formData,
 
-            </option>
+                            category_id: e.target.value
 
-            {
+                        })
 
-                categories.map((category)=>(
+                    }
 
-                    <option
+                >
 
-                        key={category.id}
+                    <option value="">
 
-                        value={category.id}
-
-                    >
-
-                        {category.name}
+                        Select Category
 
                     </option>
 
-                ))
+                    {
 
-            }
+                        categories.map((category) => (
 
-        </select>
+                            <option
 
-        {/* Brand */}
+                                key={category.id}
 
-        <select
+                                value={category.id}
 
-            value={formData.brand_id}
+                            >
 
-            onChange={(e)=>
+                                {category.name}
 
-                setFormData({
+                            </option>
 
-                    ...formData,
+                        ))
 
-                    brand_id: e.target.value
+                    }
 
-                })
+                </select>
 
-            }
+                {/* Brand */}
 
-        >
+                <select
 
-            <option value="">
+                    value={formData.brand_id}
 
-                Select Brand
+                    onChange={(e) =>
 
-            </option>
+                        setFormData({
 
-            {
+                            ...formData,
 
-                brands.map((brand)=>(
+                            brand_id: e.target.value
 
-                    <option
+                        })
 
-                        key={brand.id}
+                    }
 
-                        value={brand.id}
+                >
 
-                    >
+                    <option value="">
 
-                        {brand.name}
+                        Select Brand
 
                     </option>
 
-                ))
+                    {
 
-            }
+                        brands.map((brand) => (
 
-        </select>
+                            <option
 
-        {/* Product Name */}
+                                key={brand.id}
 
-        <input
+                                value={brand.id}
 
-            type="text"
+                            >
 
-            placeholder="Product Name"
+                                {brand.name}
 
-            value={formData.product_name}
+                            </option>
 
-            onChange={(e)=>
+                        ))
 
-                setFormData({
+                    }
 
-                    ...formData,
+                </select>
 
-                    product_name:e.target.value
+                {/* Product Name */}
 
-                })
+                <input
 
-            }
+                    type="text"
 
-        />
+                    placeholder="Product Name"
 
-        {/* Image Upload */}
+                    value={formData.product_name}
 
-        <label className="upload-label">
+                    onChange={(e) =>
 
-            Product Image
+                        setFormData({
 
-        </label>
+                            ...formData,
 
-        <input
+                            product_name: e.target.value
 
-            type="file"
+                        })
 
-            accept="image/*"
-
-            onChange={handleImageChange}
-
-        />
-
-        {
-
-            imagePreview && (
-
-                <img
-
-                    src={imagePreview}
-
-                    alt="Preview"
-
-                    className="preview-image"
+                    }
 
                 />
 
-            )
+                {/* Image Upload */}
 
-        }
+                <input
 
-        {/* Purchase Price */}
+                    type="file"
 
-        <input
+                    accept="image/*"
 
-            type="number"
+                    onChange={handleImageChange}
 
-            placeholder="Purchase Price"
-
-            value={formData.purchase_price}
-
-            onChange={(e)=>
-
-                setFormData({
-
-                    ...formData,
-
-                    purchase_price:e.target.value
-
-                })
-
-            }
-
-        />
-
-        {/* Selling Price */}
-
-        <input
-
-            type="number"
-
-            placeholder="Selling Price"
-
-            value={formData.selling_price}
-
-            onChange={(e)=>
-
-                setFormData({
-
-                    ...formData,
-
-                    selling_price:e.target.value
-
-                })
-
-            }
-
-        />
-
-        {/* GST */}
-
-        <input
-
-            type="number"
-
-            placeholder="GST (%)"
-
-            value={formData.tax}
-
-            onChange={(e)=>
-
-                setFormData({
-
-                    ...formData,
-
-                    tax:e.target.value
-
-                })
-
-            }
-
-        />
-
-        {/* Initial Stock */}
-
-        <input
-
-            type="number"
-
-            placeholder="Initial Stock"
-
-            value={formData.stock}
-
-            onChange={(e)=>
-
-                setFormData({
-
-                    ...formData,
-
-                    stock:e.target.value
-
-                })
-
-            }
-
-        />
-
-        {/* Minimum Stock */}
-
-        <input
-
-            type="number"
-
-            placeholder="Minimum Stock"
-
-            value={formData.minimum_stock}
-
-            onChange={(e)=>
-
-                setFormData({
-
-                    ...formData,
-
-                    minimum_stock:e.target.value
-
-                })
-
-            }
-
-        />
-
-        {/* Unit */}
-
-        <input
-
-            type="text"
-
-            placeholder="Unit (Kg / Ltr / Piece)"
-
-            value={formData.unit}
-
-            onChange={(e)=>
-
-                setFormData({
-
-                    ...formData,
-
-                    unit:e.target.value
-
-                })
-
-            }
-
-        />
-
-        {/* Description */}
-
-        <textarea
-
-            rows={4}
-
-            placeholder="Description"
-
-            value={formData.description}
-
-            onChange={(e)=>
-
-                setFormData({
-
-                    ...formData,
-
-                    description:e.target.value
-
-                })
-
-            }
-
-        />
-
-        {/* Status */}
-
-        <select
-
-            value={formData.status}
-
-            onChange={(e)=>
-
-                setFormData({
-
-                    ...formData,
-
-                    status:e.target.value
-
-                })
-
-            }
-
-        >
-
-            <option value="Active">
-
-                Active
-
-            </option>
-
-            <option value="Inactive">
-
-                Inactive
-
-            </option>
-
-        </select>
-
-        {/* Buttons */}
-
-        <div className="modal-actions">
-
-            <button
-
-                onClick={()=>setShowModal(false)}
-
-            >
-
-                Cancel
-
-            </button>
-
-            <button
-
-                disabled={loading}
-
-                onClick={createProduct}
-
-            >
+                />
 
                 {
 
-                    loading
+                    imagePreview && (
 
-                    ?
+                        <img
 
-                    "Saving..."
+                            src={imagePreview}
 
-                    :
+                            className="image-preview"
 
-                    editId
+                            alt="Preview"
 
-                    ?
+                        />
 
-                    "Update Product"
-
-                    :
-
-                    "Save Product"
+                    )
 
                 }
 
-            </button>
+                {/* Purchase Price */}
+
+                <input
+
+                    type="number"
+
+                    placeholder="Purchase Price"
+
+                    value={formData.purchase_price}
+
+                    onChange={(e) =>
+
+                        setFormData({
+
+                            ...formData,
+
+                            purchase_price: e.target.value
+
+                        })
+
+                    }
+
+                />
+
+                {/* Selling Price */}
+
+                <input
+
+                    type="number"
+
+                    placeholder="Selling Price"
+
+                    value={formData.selling_price}
+
+                    onChange={(e) =>
+
+                        setFormData({
+
+                            ...formData,
+
+                            selling_price: e.target.value
+
+                        })
+
+                    }
+
+                />
+
+                {/* GST */}
+
+                <input
+
+                    type="number"
+
+                    placeholder="GST (%)"
+
+                    value={formData.tax}
+
+                    onChange={(e) =>
+
+                        setFormData({
+
+                            ...formData,
+
+                            tax: e.target.value
+
+                        })
+
+                    }
+
+                />
+
+                {/* Stock */}
+
+                <input
+
+                    type="number"
+
+                    placeholder="Initial Stock"
+
+                    value={formData.stock}
+
+                    onChange={(e) =>
+
+                        setFormData({
+
+                            ...formData,
+
+                            stock: e.target.value
+
+                        })
+
+                    }
+
+                />
+
+                {/* Minimum Stock */}
+
+                <input
+
+                    type="number"
+
+                    placeholder="Minimum Stock"
+
+                    value={formData.minimum_stock}
+
+                    onChange={(e) =>
+
+                        setFormData({
+
+                            ...formData,
+
+                            minimum_stock: e.target.value
+
+                        })
+
+                    }
+
+                />
+
+                {/* Unit */}
+
+                <input
+
+                    type="text"
+
+                    placeholder="Unit (Kg, Box, Bottle...)"
+
+                    value={formData.unit}
+
+                    onChange={(e) =>
+
+                        setFormData({
+
+                            ...formData,
+
+                            unit: e.target.value
+
+                        })
+
+                    }
+
+                />
+
+                {/* Description */}
+
+                <textarea
+
+                    rows={4}
+
+                    placeholder="Description"
+
+                    value={formData.description}
+
+                    onChange={(e) =>
+
+                        setFormData({
+
+                            ...formData,
+
+                            description: e.target.value
+
+                        })
+
+                    }
+
+                />
+
+                {/* Status */}
+
+                <select
+
+                    value={formData.status}
+
+                    onChange={(e) =>
+
+                        setFormData({
+
+                            ...formData,
+
+                            status: e.target.value
+
+                        })
+
+                    }
+
+                >
+
+                    <option value="Active">
+
+                        Active
+
+                    </option>
+
+                    <option value="Inactive">
+
+                        Inactive
+
+                    </option>
+
+                </select>
+
+                {/* Buttons */}
+
+                <div className="modal-actions">
+
+                    <button
+
+                        className="cancel-btn"
+
+                        onClick={() => {
+
+                            setShowModal(false);
+
+                            setEditId(null);
+
+                        }}
+
+                    >
+
+                        Cancel
+
+                    </button>
+
+                    <button
+
+                        className="save-btn"
+
+                        onClick={createProduct}
+
+                        disabled={loading}
+
+                    >
+
+                        {
+
+                            loading
+
+                                ?
+
+                                "Saving..."
+
+                                :
+
+                                editId
+
+                                    ?
+
+                                    "Update Product"
+
+                                    :
+
+                                    "Save Product"
+
+                        }
+
+                    </button>
+
+                </div>
+
+            </div>
 
         </div>
 
-    </div>
+    )
 
-</div>
-
-)}
+}
 
         </div>
 
