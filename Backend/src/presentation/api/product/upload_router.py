@@ -61,8 +61,8 @@ async def upload_product_image(
 
     return {
 
-        "filename": filename,
+    "filename": filename,
 
-        "image_url": f"/product_images/{filename}"
+    "image_url": f"/uploads/product_images/{filename}"
 
-    }
+}
