@@ -18,3 +18,5 @@ Backend/venv/
 
 # Logs
 *.log
+
+uploads/

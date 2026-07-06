@@ -27,7 +27,8 @@ class CustomerProduct(BaseModel):
         "Customer", back_populates="product_interactions"
     )
     product: Mapped["Product"] = relationship(
-        "Product", back_populates="customer_interactions"
+        "Product",
+        # back_populates="customer_interactions"
     )
 
     __table_args__ = (

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import AdminLayout from "@/app/components/admin-layouts/AdminLayout";
 import { useAuth } from "@/src/context/AuthContext";
 import { toast } from "react-hot-toast";
-
+import { apiFetch } from "@/src/lib/api/client";
 import "./product-categories.css";
 
 interface ProductCategory {
@@ -81,17 +81,13 @@ useState({
 
         try {
 
-            const response =
-                await fetch(
+          const data = await apiFetch<ProductCategory[]>(
 
-                    `http://127.0.0.1:8000/api/v1/product-categories/${user.tenant_id}/${user.store_id}`
+`/api/v1/product-categories/${user.tenant_id}/${user.store_id}`
 
-                );
+);
 
-            const data =
-                await response.json();
-
-            setCategories(data);
+setCategories(data);
 
         }
 
@@ -109,95 +105,55 @@ useState({
 
         setLoading(true);
 
-        try {
+       try {
 
-            const response =
-                await fetch(
+    await apiFetch(
 
-                    "http://127.0.0.1:8000/api/v1/product-categories/",
+        "/api/v1/product-categories/",
 
-                    {
+        {
 
-                        method: "POST",
+            method: "POST",
 
-                        headers: {
+            body: JSON.stringify({
 
-                            "Content-Type": "application/json"
+                ...formData,
 
-                        },
+                tenant_id: user.tenant_id,
 
-                        body: JSON.stringify({
+                store_id: user.store_id,
 
-                            ...formData,
+                created_by: user.id
 
-                            tenant_id: user.tenant_id,
-
-                            store_id: user.store_id,
-
-                            created_by: user.id
-
-                        })
-
-                    }
-
-                );
-
-            const result =
-                await response.json();
-
-            if (response.ok) {
-
-                toast.success(
-
-                    "Category Added Successfully"
-
-                );
-
-                setFormData({
-
-                    name: "",
-
-                    description: "",
-
-                    status: "Active"
-
-                });
-
-                setShowModal(false);
-
-                getCategories();
-
-            }
-
-            else {
-
-                toast.error(
-
-                    result.detail || "Failed"
-
-                );
-
-            }
+            })
 
         }
 
-        catch (error) {
+    );
 
-            console.log(error);
+    toast.success("Category Added Successfully");
 
-            toast.error(
+    setFormData({
 
-                "Something Went Wrong"
+        name: "",
 
-            );
+        description: "",
 
-        }
+        status: "Active"
 
-        finally {
+    });
 
-            setLoading(false);
+    setShowModal(false);
 
-        }
+    getCategories();
+
+}
+
+catch(error:any){
+
+    toast.error(error.message);
+
+}
 
     };
     const openEdit = (category: ProductCategory) => {
@@ -221,53 +177,35 @@ const updateCategory = async () => {
 
     if(!selectedId) return;
 
-    try{
+  try{
 
-        const response = await fetch(
+    await apiFetch(
 
-            `http://127.0.0.1:8000/api/v1/product-categories/${selectedId}`,
+        `/api/v1/product-categories/${selectedId}`,
 
-            {
+        {
 
-                method:"PUT",
+            method:"PUT",
 
-                headers:{
-
-                    "Content-Type":"application/json"
-
-                },
-
-                body:JSON.stringify(editData)
-
-            }
-
-        );
-
-        const result = await response.json();
-
-        if(response.ok){
-
-            toast.success("Category Updated");
-
-            setEditModal(false);
-
-            getCategories();
+            body:JSON.stringify(editData)
 
         }
 
-        else{
+    );
 
-            toast.error(result.detail);
+    toast.success("Category Updated");
 
-        }
+    setEditModal(false);
 
-    }
+    getCategories();
 
-    catch(error){
+}
 
-        console.log(error);
+catch(error:any){
 
-    }
+    toast.error(error.message);
+
+}
 
 };
 const deleteCategory = async (
@@ -290,49 +228,31 @@ const deleteCategory = async (
 
     }
 
-    try{
+   try{
 
-        const response = await fetch(
+    await apiFetch(
 
-            `http://127.0.0.1:8000/api/v1/product-categories/${id}`,
+        `/api/v1/product-categories/${id}`,
 
-            {
+        {
 
-                method:"DELETE"
-
-            }
-
-        );
-
-        if(response.ok){
-
-            toast.success(
-
-                "Category Deleted"
-
-            );
-
-            getCategories();
+            method:"DELETE"
 
         }
 
-        else{
+    );
 
-            toast.error(
+    toast.success("Category Deleted");
 
-                "Delete Failed"
+    getCategories();
 
-            );
+}
 
-        }
+catch(error:any){
 
-    }
+    toast.error(error.message);
 
-    catch(error){
-
-        console.log(error);
-
-    }
+}
 
 };
     const filteredCategories = categories.filter((item) =>

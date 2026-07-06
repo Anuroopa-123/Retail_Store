@@ -61,7 +61,7 @@ export default function AdminSidebar() {
      {
       name: "Products",
       icon: <FaBoxOpen />,
-      path: "/admin/product"
+      path: "/admin/products"
     },
     {
       name: "Customers",

@@ -39,9 +39,14 @@ from src.presentation.api.admin.profile_router import (
 from src.presentation.api.product_category.router import (
     router as product_category_router
 )
+from src.presentation.api.product.router import (
+    router as product_router
+)
 from src.presentation.api.brand.router import (
     router as brand_router
 )
+from src.presentation.api.product.upload_router import router as upload_router
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 UPLOAD_DIR = BASE_DIR / "uploads"
@@ -163,10 +168,22 @@ app.include_router(
     prefix="/api/v1"
 
 )
+app.include_router(
+    product_router,
+    prefix="/api/v1"
+)
 app.mount(
     "/uploads",
     StaticFiles(directory=str(UPLOAD_DIR)),
     name="uploads"
+)
+
+app.include_router(
+
+    upload_router,
+
+    prefix="/api/v1"
+
 )
 # ── health ────────────────────────────────────────────────────────────────────
 
