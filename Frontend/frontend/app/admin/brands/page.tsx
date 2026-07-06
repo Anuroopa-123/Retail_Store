@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import AdminLayout from "@/app/components/admin-layouts/AdminLayout";
 import { useAuth } from "@/src/context/AuthContext";
 import { toast } from "react-hot-toast";
+import { apiFetch } from "@/src/lib/api/client";
 
 import "./brands.css";
 
@@ -110,15 +111,13 @@ export default function BrandsPage() {
 
         try{
 
-            const response = await fetch(
+           const data = await apiFetch<Category[]>(
 
-`http://127.0.0.1:8000/api/v1/product-categories/${user.tenant_id}/${user.store_id}`
+`/api/v1/product-categories/${user.tenant_id}/${user.store_id}`
 
-            );
+);
 
-            const data = await response.json();
-
-            setCategories(data);
+setCategories(data);
 
         }
 
@@ -140,15 +139,13 @@ export default function BrandsPage() {
 
         try{
 
-            const response = await fetch(
+        const data = await apiFetch<Brand[]>(
 
-`http://127.0.0.1:8000/api/v1/brands/${user.tenant_id}/${user.store_id}`
+`/api/v1/brands/${user.tenant_id}/${user.store_id}`
 
-            );
+);
 
-            const data = await response.json();
-
-            setBrands(data);
+setBrands(data);
 
         }
 
@@ -172,85 +169,40 @@ export default function BrandsPage() {
 
         try{
 
-            const response = await fetch(
+           await apiFetch(
 
-                "http://127.0.0.1:8000/api/v1/brands/",
+"/api/v1/brands/",
 
-                {
+{
 
-                    method:"POST",
+method:"POST",
 
-                    headers:{
+body:JSON.stringify({
 
-                        "Content-Type":"application/json"
+...formData,
 
-                    },
+tenant_id:user.tenant_id,
 
-                    body:JSON.stringify({
+store_id:user.store_id,
 
-                        ...formData,
+category_id:Number(formData.category_id),
 
-                        tenant_id:user.tenant_id,
+created_by:user.id
 
-                        store_id:user.store_id,
+})
 
-                        category_id:Number(
+}
 
-                            formData.category_id
+);
 
-                        ),
+toast.success("Brand Added Successfully");
 
-                        created_by:user.id
+setShowModal(false);
 
-                    })
-
-                }
-
-            );
-
-            const result = await response.json();
-
-            if(response.ok){
-
-                toast.success(
-
-                    "Brand Added Successfully"
-
-                );
-
-                setFormData({
-
-                    category_id:"",
-
-                    name:"",
-
-                    description:"",
-
-                    logo_url:"",
-
-                    status:"Active"
-
-                });
-
-                setShowModal(false);
-
-                getBrands();
-
-            }
-
-            else{
-
-                toast.error(
-
-                    result.detail ||
-
-                    "Failed"
-
-                );
-
-            }
-
+getBrands();
         }
+
+          
 
         catch(error){
 
@@ -317,29 +269,19 @@ const updateBrand = async () => {
 
     try{
 
-        const response = await fetch(
+        await apiFetch(
 
-            `http://127.0.0.1:8000/api/v1/brands/${selectedId}`,
+            `/api/v1/brands/${selectedId}`,
 
             {
 
                 method:"PUT",
 
-                headers:{
-
-                    "Content-Type":"application/json"
-
-                },
-
                 body:JSON.stringify({
 
                     ...editData,
 
-                    category_id:Number(
-
-                        editData.category_id
-
-                    )
+                    category_id:Number(editData.category_id)
 
                 })
 
@@ -347,42 +289,21 @@ const updateBrand = async () => {
 
         );
 
-        const result = await response.json();
+        toast.success("Brand Updated Successfully");
 
-        if(response.ok){
+        setEditModal(false);
 
-            toast.success(
-
-                "Brand Updated Successfully"
-
-            );
-
-            setEditModal(false);
-
-            getBrands();
-
-        }
-
-        else{
-
-            toast.error(
-
-                result.detail
-
-            );
-
-        }
+        getBrands();
 
     }
 
-    catch(error){
+    catch(error:any){
 
-        console.log(error);
+        toast.error(error.message);
 
     }
 
 };
-
 // =====================================
 // Delete Brand
 // =====================================
@@ -406,50 +327,31 @@ const deleteBrand = async (
         return;
 
     }
+try{
 
-    try{
+    await apiFetch(
 
-        const response = await fetch(
+        `/api/v1/brands/${id}`,
 
-            `http://127.0.0.1:8000/api/v1/brands/${id}`,
+        {
 
-            {
-
-                method:"DELETE"
-
-            }
-
-        );
-
-        if(response.ok){
-
-            toast.success(
-
-                "Brand Deleted"
-
-            );
-
-            getBrands();
+            method:"DELETE"
 
         }
 
-        else{
+    );
 
-            toast.error(
+    toast.success("Brand Deleted");
 
-                "Delete Failed"
+    getBrands();
 
-            );
+}
 
-        }
+catch(error:any){
 
-    }
+    toast.error(error.message);
 
-    catch(error){
-
-        console.log(error);
-
-    }
+}
 
 };
 
