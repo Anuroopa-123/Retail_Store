@@ -45,6 +45,13 @@ from src.presentation.api.product.router import (
 from src.presentation.api.brand.router import (
     router as brand_router
 )
+from src.presentation.api.inventory.stock_alert.router import (
+    router as stock_alert_router
+)
+
+from src.presentation.api.inventory.stock_movement.router import (
+    router as stock_movement_router
+)
 from src.presentation.api.product.upload_router import router as upload_router
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -176,6 +183,15 @@ app.mount(
     "/uploads",
     StaticFiles(directory=str(UPLOAD_DIR)),
     name="uploads"
+)
+app.include_router(
+    stock_alert_router,
+    prefix="/api/v1"
+)
+
+app.include_router(
+    stock_movement_router,
+    prefix="/api/v1"
 )
 
 app.include_router(
