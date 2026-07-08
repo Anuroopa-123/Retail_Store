@@ -1,0 +1,361 @@
+.inventory-container{
+
+    padding:30px;
+
+    background:#f8fafc;
+
+    min-height:100vh;
+
+}
+
+/* =====================================
+Header
+===================================== */
+
+.inventory-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+}
+
+.inventory-header h1{
+
+    font-size:28px;
+
+    font-weight:700;
+
+    color:#1e293b;
+
+}
+
+.add-btn{
+
+    border:none;
+
+    background:#2563eb;
+
+    color:#fff;
+
+    padding:12px 22px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.add-btn:hover{
+
+    background:#1d4ed8;
+
+}
+
+/* =====================================
+Search
+===================================== */
+
+.search-box{
+
+    width:100%;
+
+    padding:12px 15px;
+
+    border:1px solid #d1d5db;
+
+    border-radius:8px;
+
+    margin-bottom:25px;
+
+    font-size:15px;
+
+    outline:none;
+
+}
+
+.search-box:focus{
+
+    border-color:#2563eb;
+
+}
+
+/* =====================================
+Table
+===================================== */
+
+.table-wrapper{
+
+    overflow:auto;
+
+    background:#fff;
+
+    border-radius:10px;
+
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+
+}
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+thead{
+
+    background:#2563eb;
+
+    color:#fff;
+
+}
+
+th{
+
+    padding:14px;
+
+    text-align:left;
+
+    font-weight:600;
+
+}
+
+td{
+
+    padding:14px;
+
+    border-bottom:1px solid #e5e7eb;
+
+    color:#475569;
+
+}
+
+tbody tr:hover{
+
+    background:#f8fafc;
+
+}
+
+/* =====================================
+Modal
+===================================== */
+
+.modal-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:999;
+
+}
+
+.inventory-modal{
+
+    width:520px;
+
+    background:#fff;
+
+    border-radius:12px;
+
+    padding:30px;
+
+    animation:popup .25s ease;
+
+}
+
+@keyframes popup{
+
+    from{
+
+        transform:scale(.8);
+
+        opacity:0;
+
+    }
+
+    to{
+
+        transform:scale(1);
+
+        opacity:1;
+
+    }
+
+}
+
+.inventory-modal h2{
+
+    margin-bottom:25px;
+
+    color:#1e293b;
+
+}
+
+.inventory-modal input,
+
+.inventory-modal select,
+
+.inventory-modal textarea{
+
+    width:100%;
+
+    padding:12px;
+
+    margin-bottom:18px;
+
+    border:1px solid #d1d5db;
+
+    border-radius:8px;
+
+    outline:none;
+
+    font-size:15px;
+
+}
+
+.inventory-modal input:focus,
+
+.inventory-modal select:focus,
+
+.inventory-modal textarea:focus{
+
+    border-color:#2563eb;
+
+}
+
+.inventory-modal textarea{
+
+    resize:none;
+
+}
+
+/* =====================================
+Current Stock
+===================================== */
+
+.current-stock{
+
+    background:#eff6ff;
+
+    border:1px solid #bfdbfe;
+
+    color:#1d4ed8;
+
+    padding:12px;
+
+    border-radius:8px;
+
+    margin-bottom:18px;
+
+    font-weight:600;
+
+}
+
+.current-stock strong{
+
+    margin-left:8px;
+
+    color:#0f172a;
+
+}
+
+/* =====================================
+Buttons
+===================================== */
+
+.modal-actions{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:12px;
+
+    margin-top:15px;
+
+}
+
+.modal-actions button{
+
+    padding:10px 18px;
+
+    border:none;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+}
+
+.modal-actions button:first-child{
+
+    background:#e5e7eb;
+
+    color:#374151;
+
+}
+
+.modal-actions button:last-child{
+
+    background:#2563eb;
+
+    color:#fff;
+
+}
+
+.modal-actions button:last-child:hover{
+
+    background:#1d4ed8;
+
+}
+
+/* =====================================
+Responsive
+===================================== */
+
+@media(max-width:768px){
+
+    .inventory-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:15px;
+
+    }
+
+    .inventory-modal{
+
+        width:95%;
+
+    }
+
+    table{
+
+        min-width:900px;
+
+    }
+
+}
