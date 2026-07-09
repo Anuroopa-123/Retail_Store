@@ -44,3 +44,16 @@ body {
   --amber:#f59e0b;
   --red:#ef4444;
 }
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--paper);   /* #efe9da */
+  
+}
+
+.admin-content {
+  padding: 28px;
+  background: var(--paper);
+  min-height: calc(100vh - 70px);
+}
