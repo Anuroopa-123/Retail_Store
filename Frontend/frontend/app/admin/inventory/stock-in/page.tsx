@@ -269,14 +269,7 @@ const createStockIn = async () => {
 
     try {
 
-        const previousQty =
-            selectedProduct?.stock || 0;
-
-        const quantity =
-            Number(formData.quantity);
-
-        const currentQty =
-            previousQty + quantity;
+       const quantity = Number(formData.quantity);
 
         await apiFetch(
 
@@ -286,33 +279,25 @@ const createStockIn = async () => {
 
                 method: "POST",
 
-                body: JSON.stringify({
+               body: JSON.stringify({
 
-                    tenant_id: user.tenant_id,
+    tenant_id: user.tenant_id,
 
-                    store_id: user.store_id,
+    store_id: user.store_id,
 
-                    product_id: Number(
+    product_id: Number(formData.product_id),
 
-                        formData.product_id
+    movement_type: "STOCK_IN",
 
-                    ),
+    quantity,
 
-                    movement_type: "STOCK_IN",
+    reference: formData.reference,
 
-                    quantity,
+    note: formData.note,
 
-                    previous_qty: previousQty,
+    moved_by: user.id
 
-                    current_qty: currentQty,
-
-                    reference: formData.reference,
-
-                    note: formData.note,
-
-                    moved_by: user.id
-
-                })
+})
 
             }
 

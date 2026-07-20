@@ -51,6 +51,16 @@ class StockMovement(BaseModel):
         index=True
 
     )
+    
+    destination_store_id: Mapped[Optional[int]] = mapped_column(
+        Integer,
+        ForeignKey(
+            "stores.id",
+            ondelete="CASCADE"
+        ),
+        nullable=True,
+        index=True
+    )
 
     product_id: Mapped[int] = mapped_column(
 
@@ -134,8 +144,15 @@ class StockMovement(BaseModel):
 
     product = relationship("Product")
 
-    store = relationship("Store")
+    store = relationship(
+        "Store",
+        foreign_keys=[store_id]
+    )
 
+    destination_store = relationship(
+        "Store",
+        foreign_keys=[destination_store_id]
+    )
     def __repr__(self):
 
         return f"<StockMovement {self.product_id}>"

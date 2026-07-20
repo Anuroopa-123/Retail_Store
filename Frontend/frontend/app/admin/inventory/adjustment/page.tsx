@@ -13,15 +13,15 @@ import "./adjustment.css";
 // Interfaces
 // =========================================
 
-interface Product {
+// interface Product {
 
-    id: number;
+//     id: number;
 
-    product_name: string;
+//     product_name: string;
 
-    stock: number;
+//     stock: number;
 
-}
+// }
 
 interface StockMovement {
 
@@ -379,10 +379,6 @@ const createAdjustment = async () => {
 
                         ),
 
-                    previous_qty:
-
-                        previousQty,
-
                     current_qty:
 
                         currentQty,
@@ -409,25 +405,25 @@ const createAdjustment = async () => {
         // Update Product Stock
         // ---------------------------------------
 
-        await apiFetch(
+        // await apiFetch(
 
-            `/api/v1/products/${selectedProduct.id}`,
+        //     `/api/v1/products/${selectedProduct.id}`,
 
-            {
+        //     {
 
-                method: "PUT",
+        //         method: "PUT",
 
-                body: JSON.stringify({
+        //         body: JSON.stringify({
 
-                    stock:
+        //             stock:
 
-                        currentQty
+        //                 currentQty
 
-                })
+        //         })
 
-            }
+        //     }
 
-        );
+        // );
 
         toast.success(
 
