@@ -59,10 +59,6 @@ class ProductUpdateRequest(BaseModel):
 
     tax: Optional[float] = None
 
-    stock: Optional[int] = None
-
-    minimum_stock: Optional[int] = None
-
     unit: Optional[str] = None
 
     description: Optional[str] = None

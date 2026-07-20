@@ -83,16 +83,6 @@ class Product(BaseModel):
         default=0
     )
 
-    stock: Mapped[int] = mapped_column(
-        Integer,
-        default=0
-    )
-
-    minimum_stock: Mapped[int] = mapped_column(
-        Integer,
-        default=10
-    )
-
     image_url: Mapped[Optional[str]] = mapped_column(
         Text,
         nullable=True

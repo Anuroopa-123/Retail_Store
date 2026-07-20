@@ -5,11 +5,11 @@ from sqlalchemy import (
     func
 )
 
-from sqlalchemy.orm import (
-    joinedload
-)
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 
 from src.domain.entities.product.product import Product
+from src.domain.entities.product.product_stock import ProductStock
 
 
 class ProductRepository:
@@ -34,7 +34,21 @@ class ProductRepository:
 
         result = await self.db.execute(
 
-            select(Product)
+            select(
+
+                Product,
+
+                ProductStock
+
+            )
+
+            .join(
+
+                ProductStock,
+
+                Product.id == ProductStock.product_id
+
+            )
 
             .options(
 
@@ -48,7 +62,9 @@ class ProductRepository:
 
                 Product.tenant_id == tenant_id,
 
-                Product.store_id == store_id
+                Product.store_id == store_id,
+
+                ProductStock.store_id == store_id
 
             )
 
@@ -60,7 +76,19 @@ class ProductRepository:
 
         )
 
-        return result.scalars().all()
+        rows = result.all()
+
+        products = []
+
+        for product, stock in rows:
+
+            product.stock = stock.stock
+
+            product.minimum_stock = stock.minimum_stock
+
+            products.append(product)
+
+        return products
 
     # ----------------------------------
     # Get Product By Id
@@ -76,7 +104,21 @@ class ProductRepository:
 
         result = await self.db.execute(
 
-            select(Product)
+            select(
+
+                Product,
+
+                ProductStock
+
+            )
+
+            .join(
+
+                ProductStock,
+
+                Product.id == ProductStock.product_id
+
+            )
 
             .where(
 
@@ -86,7 +128,19 @@ class ProductRepository:
 
         )
 
-        return result.scalar_one_or_none()
+        row = result.first()
+
+        if not row:
+
+            return None
+
+        product, stock = row
+
+        product.stock = stock.stock
+
+        product.minimum_stock = stock.minimum_stock
+
+        return product
 
     # ----------------------------------
     # Check Duplicate Product
@@ -125,7 +179,6 @@ class ProductRepository:
     # ----------------------------------
     # Create Product
     # ----------------------------------
-
     async def create(
 
         self,
@@ -166,10 +219,6 @@ class ProductRepository:
 
             tax=data.tax,
 
-            stock=data.stock,
-
-            minimum_stock=data.minimum_stock,
-
             unit=data.unit,
 
             image_url=data.image_url,
@@ -183,6 +232,23 @@ class ProductRepository:
         )
 
         self.db.add(product)
+
+    # Generate product.id before commit
+        await self.db.flush()
+
+        product_stock = ProductStock(
+
+            product_id=product.id,
+
+            store_id=data.store_id,
+
+            stock=data.stock,
+
+            minimum_stock=data.minimum_stock
+
+        )
+
+        self.db.add(product_stock)
 
         await self.db.commit()
 
@@ -221,12 +287,6 @@ class ProductRepository:
 
         if data.tax is not None:
             product.tax = data.tax
-
-        if data.stock is not None:
-            product.stock = data.stock
-
-        if data.minimum_stock is not None:
-            product.minimum_stock = data.minimum_stock
 
         if data.unit is not None:
             product.unit = data.unit

@@ -267,9 +267,9 @@ const createStockOut = async () => {
 
         Number(formData.quantity);
 
-    const previousQty =
+    // const previousQty =
 
-        selectedProduct.stock;
+    //     selectedProduct.stock;
 
     // ---------------------------------
     // Validation
@@ -287,7 +287,7 @@ const createStockOut = async () => {
 
     }
 
-    if (quantity > previousQty) {
+   if (quantity > (selectedProduct?.stock ?? 0)) {
 
         toast.error(
 
@@ -299,9 +299,9 @@ const createStockOut = async () => {
 
     }
 
-    const currentQty =
+    // const currentQty =
 
-        previousQty - quantity;
+    //     previousQty - quantity;
 
     try {
 
@@ -319,33 +319,25 @@ const createStockOut = async () => {
 
                 method: "POST",
 
-                body: JSON.stringify({
+              body: JSON.stringify({
 
-                    tenant_id: user.tenant_id,
+    tenant_id: user.tenant_id,
 
-                    store_id: user.store_id,
+    store_id: user.store_id,
 
-                    product_id: selectedProduct.id,
+    product_id: selectedProduct.id,
 
-                    movement_type: "STOCK_OUT",
+    movement_type: "STOCK_OUT",
 
-                    quantity,
+    quantity,
 
-                    previous_qty: previousQty,
+    reference: formData.reference,
 
-                    current_qty: currentQty,
+    note: formData.note,
 
-                    reference:
+    moved_by: user.id
 
-                        formData.reference,
-
-                    note:
-
-                        formData.note,
-
-                    moved_by: user.id
-
-                })
+})
 
             }
 
@@ -355,23 +347,23 @@ const createStockOut = async () => {
         // Update Product Stock
         // ---------------------------------
 
-        await apiFetch(
+        // await apiFetch(
 
-            `/api/v1/products/${selectedProduct.id}`,
+        //     `/api/v1/products/${selectedProduct.id}`,
 
-            {
+        //     {
 
-                method: "PUT",
+        //         method: "PUT",
 
-                body: JSON.stringify({
+        //         body: JSON.stringify({
 
-                    stock: currentQty
+        //             stock: currentQty
 
-                })
+        //         })
 
-            }
+        //     }
 
-        );
+        // );
 
         toast.success(
 

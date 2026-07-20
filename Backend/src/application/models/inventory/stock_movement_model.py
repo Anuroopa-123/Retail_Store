@@ -13,6 +13,8 @@ class StockMovementCreateRequest(BaseModel):
     tenant_id: int
 
     store_id: int
+    
+    destination_store_id: Optional[int] = None
 
     product_id: int
 
@@ -24,15 +26,16 @@ class StockMovementCreateRequest(BaseModel):
 
     quantity: int
 
-    previous_qty: int
+    # previous_qty: int
 
-    current_qty: int
+    # current_qty: int
 
     reference: Optional[str] = None
 
     note: Optional[str] = None
 
     moved_by: Optional[int] = None
+    current_qty: Optional[int] = None 
 
 
 # ---------------------------------------
@@ -40,6 +43,7 @@ class StockMovementCreateRequest(BaseModel):
 # ---------------------------------------
 
 class StockMovementUpdateRequest(BaseModel):
+    destination_store_id: Optional[int] = None
 
     movement_type: Optional[str] = None
 
@@ -67,6 +71,8 @@ class StockMovementResponse(BaseModel):
     tenant_id: int
 
     store_id: int
+    
+    destination_store_id: Optional[int]
 
     product_id: int
 
